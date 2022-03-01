@@ -1,7 +1,7 @@
 
 module RIOPA
 
-export InputsParser
+export parse_inputs
 
 include("core/inputs.jl")
 
