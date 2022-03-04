@@ -5,7 +5,11 @@ import RIOPA
 
 function main(args)::Int32
 
-    MPI.Init()
+    initialized_here = false
+    if !MPI.Initialized()
+        MPI.Init()
+        initialized_here = true
+    end
 
     comm = MPI.COMM_WORLD
     rank = MPI.Comm_rank(comm)
@@ -33,7 +37,9 @@ function main(args)::Int32
         end
     end
 
-    MPI.Finalize()
+    if initialized_here
+        MPI.Finalize()
+    end
 
     return 0
 

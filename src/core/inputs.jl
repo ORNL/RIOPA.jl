@@ -9,7 +9,7 @@ using ArgParse
 
 function parse_inputs(args)
 
-    s = ArgParseSettings(description = "Hey!")
+    s = ArgParseSettings(description = "Hey!", exc_handler = ArgParse.debug_handler)
     @add_arg_table! s begin
         "--config", "-c"
             help = "Specify (YAML) config file to generate I/O: config.yaml"

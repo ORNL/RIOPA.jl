@@ -15,9 +15,9 @@ include("../../../src/core/inputs.jl")
     inputs = parse_inputs(["--hello"])
     @test inputs["hello"] == true
 
-    # @test_throws ArgumentError("RIOPA: input argument hello-fail is not valid") parse_inputs([
-    #     "hello-fail",
-    # ])
+    @test_throws ArgParse.ArgParseError("too many arguments") parse_inputs([
+        "hello-fail",
+    ])
 
     # @test_throws ArgumentError("RIOPA: input arguments are not valid") parse_inputs([
     #     "hello-fail",
