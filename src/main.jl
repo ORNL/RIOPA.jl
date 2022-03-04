@@ -15,11 +15,15 @@ function main(args)::Int32
     rank = MPI.Comm_rank(comm)
     size = MPI.Comm_size(comm)
 
-    try
-        inputs = RIOPA.parse_inputs(args)
-    catch y
-        if rank == 0
-            rethrow()
+    inputs = RIOPA.parse_inputs(args)
+
+    if inputs["generate-config"]
+        # Generate config.yaml
+    else
+        if inputs["hello"]
+            # Run hello mode
+        else
+            # Run normal mode
         end
     end
 
