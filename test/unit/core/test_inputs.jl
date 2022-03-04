@@ -1,28 +1,19 @@
-
-module RiopaTesting
-
-using MPI
-
-function __init__()
-    MPI.Init()
-end
-
-using Test
+using Test, ArgParse
 
 include("../../../src/core/inputs.jl")
 
-@testset "test_inputs.jl" begin
+@testset "inputs" begin
     inputs = parse_inputs(["--hello"])
     @test inputs["hello"] == true
 
-    @test_throws ArgParse.ArgParseError("too many arguments") parse_inputs([
-        "hello-fail",
-    ])
+    # because there are currently no positional arguments
+    @test_throws ArgParse.ArgParseError("too many arguments") parse_inputs(
+        ["hello-fail"],
+        error_handler = ArgParse.debug_handler,
+    )
 
-    # @test_throws ArgumentError("RIOPA: input arguments are not valid") parse_inputs([
-    #     "hello-fail",
-    #     "hello-fail-again",
-    # ])
-end
-
+    @test_throws ArgParse.ArgParseError("unrecognized option --hey") parse_inputs(
+        ["--hey"],
+        error_handler = ArgParse.debug_handler,
+    )
 end
