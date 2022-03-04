@@ -3,7 +3,7 @@ using Test, MPI, ArgParse
 
 MPI.Init()
 
-include("../../src/main/main.jl")
+include("../../src/main.jl")
 # These tests just make sure 
 @testset "test_main" begin
     # mpiexec() do cmd
