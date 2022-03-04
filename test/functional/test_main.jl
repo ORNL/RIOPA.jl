@@ -1,7 +1,13 @@
 
-using Test, MPI
+using Test, MPI, ArgParse
 
-# These tests just make sure 
-@testset "test_main" begin
-    @test run(Cmd(`mpiexec -n 4 julia --project=. src/main/riopa.jl hello`)).exitcode == 0
+MPI.Init()
+
+include("../../src/main.jl")
+
+@testset "main" begin
+    @test main(["--hello"]) == 0
+    @test main(["--generate-config"]) == 0
 end
+
+MPI.Finalize()

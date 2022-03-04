@@ -1,29 +1,22 @@
 
-mutable struct Inputs
-    hello::String
+using ArgParse
 
-    Inputs() = new("")
-end
+function parse_inputs(args; error_handler = ArgParse.default_handler)
 
-
-function parse_inputs(args)::Inputs
-
-    inputs = Inputs()
-
-    if size(args)[1] == 1
-
-        arg1::String = args[1]
-
-        if arg1 == "hello" || arg1 == "hello-adios2"
-            inputs.hello = arg1
-        else
-            message = string("RIOPA: input argument ", arg1, " is not valid")
-            throw(ArgumentError(message))
-        end
-    else
-        message = string("RIOPA: input arguments are not valid")
-        throw(ArgumentError(message))
+    s = ArgParseSettings(description = "Hey!", exc_handler = error_handler)
+    @add_arg_table! s begin
+        "--hello", "-m"
+        help = "Run in hello mode (minimal functionality test)"
+        action = :store_true
+        "--config", "-c"
+        help = "Specify (YAML) config file to generate I/O: config.yaml"
+        arg_type = String
+        "--generate-config", "-g"
+        help = "Create default config file"
+        action = :store_true
     end
+
+    inputs = parse_args(args, s)
 
     return inputs
 end
