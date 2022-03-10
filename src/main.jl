@@ -18,8 +18,10 @@ function main(args)::Int32
     inputs = RIOPA.parse_inputs(args)
 
     if inputs["generate-config"]
-        # Generate config.yaml
+        RIOPA.generate_config()
     else
+        config = RIOPA.read_config(inputs["config"])
+        println(config)
         if inputs["hello"]
             # Run hello mode
         else

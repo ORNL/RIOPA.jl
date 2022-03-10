@@ -1,17 +1,18 @@
 name = "RIOPA"
 uuid = "64717a72-7398-4941-96cc-63b6050e3247"
+authors = ["Philip Fackler <facklerpw@ornl.gov>", "William F Godoy <godoywf@ornl.gov>"]
 version = "0.0.1"
-authors = ["Philip Fackler <facklerpw@ornl.gov>",
-           "William F Godoy <godoywf@ornl.gov>"]
 
 [deps]
-MPI = "da04e1cc-30fd-572f-bb4f-1f8673147195"
-ArgParse = "c7e460c6-2fb9-53a9-8c5b-16f535851c63"
 ADIOS2 = "e0ce9d3b-0dbd-416f-8264-ccca772f60ec"
+ArgParse = "c7e460c6-2fb9-53a9-8c5b-16f535851c63"
 HDF5 = "f67ccb44-e63f-5c2f-98bd-6dc0ccc4ba2f"
+MPI = "da04e1cc-30fd-572f-bb4f-1f8673147195"
+OrderedCollections = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
+YAML = "ddb6d928-2868-570f-bddf-ab3f9cf99eb6"
 
 [compat]
-julia = "1.4"
+julia = "1.6"
 
 [extras]
 JuliaFormatter = "98e50ef6-434e-11e9-1051-2b60c6c9e899"
