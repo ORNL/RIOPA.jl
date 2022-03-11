@@ -1,7 +1,5 @@
 using Test, ArgParse, MPI
 
-# MPI.Init()
-
 include("../../../src/core/inputs.jl")
 
 @testset "cmdline" begin
