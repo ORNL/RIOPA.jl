@@ -1,13 +1,12 @@
 
 using Test, MPI, ArgParse
 
-MPI.Init()
-
 include("../../src/main.jl")
 
 @testset "main" begin
-    @test main(["--hello"]) == 0
-    @test main(["--generate-config"]) == 0
+    @test main(["hello"]) == 0
+    filename = "testcase-temp-config.yaml"
+    @test main(["-c", filename, "generate-config"]) == 0
+    @test ispath(filename)
+    rm(filename)
 end
-
-MPI.Finalize()

@@ -1,5 +1,5 @@
+using MPI, MLStyle
 
-import MPI
 import RIOPA
 
 
@@ -17,16 +17,13 @@ function main(args)::Int32
 
     inputs = RIOPA.parse_inputs(args)
 
-    if inputs["generate-config"]
-        RIOPA.generate_config()
-    else
-        config = RIOPA.read_config(inputs["config"])
-        println(config)
-        if inputs["hello"]
-            # Run hello mode
-        else
-            # Run normal mode
-        end
+    configFile = inputs["config"]
+
+    command = inputs["%COMMAND%"]
+    @match command begin
+        "hello" => println("Hello mode; config file: ", configFile)
+        "generate-config" => RIOPA.generate_config(configFile)
+        nothing => println("Normal mode; config file: ", configFile)
     end
 
     if initialized_here

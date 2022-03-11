@@ -1,19 +1,26 @@
 
-using ArgParse, OrderedCollections, YAML
+using ArgParse, OrderedCollections, YAML, MPI
 
 function parse_inputs(args; error_handler = ArgParse.default_handler)
 
-    s = ArgParseSettings(description = "Hey!", exc_handler = error_handler)
+    s = ArgParseSettings(
+        description = "Reproducible Input Ouput (I/O) Pattern Application (RIOPA)",
+        add_version = true,
+        version = @project_version,
+        commands_are_required = false,
+        exc_handler = error_handler,
+    )
     @add_arg_table! s begin
-        "--hello", "-m"
+        "hello"
         help = "Run in hello mode (minimal functionality test)"
-        action = :store_true
+        action = :command
+        "generate-config"
+        help = """Create default config file
+        (as "config.yaml" unless --config option is used)"""
+        action = :command
         "--config", "-c"
-        help = "Specify (YAML) config file to generate I/O: config.yaml"
+        help = "Specify name of (YAML) config file to generate I/O"
         arg_type = String
-        "--generate-config", "-g"
-        help = "Create default config file"
-        action = :store_true
     end
 
     inputs = parse_args(args, s)
@@ -21,7 +28,11 @@ function parse_inputs(args; error_handler = ArgParse.default_handler)
     return inputs
 end
 
-function read_config(filename::AbstractString)
+function default_config_filename()
+    return "default.yaml"
+end
+
+function read_config(filename::AbstractString = default_config_filename())
     return YAML.load_file(filename, dicttype = LittleDict{Symbol,Any})
 end
 
@@ -40,7 +51,12 @@ function default_config()
     return config
 end
 
-function generate_config()
-    YAML.write_file("config.yaml", default_config())
+function generate_config(filename::AbstractString = default_config_filename())
+    if MPI.Comm_rank(MPI.COMM_WORLD) == 0
+        YAML.write_file(filename, default_config())
+        println("Generated config file: ", filename)
+    end
     nothing
 end
+
+generate_config(::Nothing) = generate_config()
