@@ -7,7 +7,6 @@ import Test: @testset, @test, @test_throws
     inputs = RIOPA.parse_inputs(["hello"])
     @test inputs["%COMMAND%"] == "hello"
 
-    # because there are currently no positional arguments
     @test_throws ArgError("unknown command: hello-fail") RIOPA.parse_inputs(
         ["hello-fail"],
         error_handler = ArgParse.debug_handler,
