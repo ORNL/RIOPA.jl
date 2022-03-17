@@ -1,15 +1,16 @@
-using Test, MPI
+import MPI
+import Test: @testset, @test, @test_throws
 
 @testset "cmdline" begin
-    mpiexec() do runcmd
+    MPI.mpiexec() do runcmd
         juliacmd = `julia --project=.`
 
-        @test run(
-            Cmd(`$runcmd -n 4 $juliacmd riopa.jl --hello`),
-        ).exitcode == 0
+        @test run(`$runcmd -n 4 $juliacmd riopa.jl hello`).exitcode == 0
 
         @test run(
-            Cmd(`$runcmd -n 4 $juliacmd riopa.jl --generate-config`),
+            `$runcmd -n 4 $juliacmd riopa.jl generate-config`,
         ).exitcode == 0
+        @test ispath("default.yaml")
+        rm("default.yaml")
     end
 end
