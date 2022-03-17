@@ -52,7 +52,7 @@ function default_config()
 end
 
 function generate_config(filename::AbstractString = default_config_filename())
-    if MPI.Comm_rank(MPI.COMM_WORLD) == 0
+    if getmpiworldrank() == 0
         YAML.write_file(filename, default_config())
         println("Generated config file: ", filename)
     end

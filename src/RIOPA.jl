@@ -4,13 +4,14 @@ export parse_inputs, read_config, generate_config
 
 import MPI
 
-const worldrank = Ref{Int}(-1)
 function __init__()
     if !MPI.Initialized()
         MPI.Init()
     end
-    worldrank[] = MPI.Comm_rank(MPI.COMM_WORLD)
 end
+
+getmpiworldrank() = MPI.Comm_rank(MPI.COMM_WORLD)
+getmpiworldsize() = MPI.Comm_size(MPI.COMM_WORLD)
 
 include("core/inputs.jl")
 
