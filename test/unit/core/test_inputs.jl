@@ -1,7 +1,7 @@
-import ArgParse, MPI, RIOPA
+import ArgParse, RIOPA
 import Test: @testset, @test, @test_throws
 
-@testset "cmdline" begin
+@testset "args" begin
     ArgError = ArgParse.ArgParseError
 
     inputs = RIOPA.parse_inputs(["hello"])

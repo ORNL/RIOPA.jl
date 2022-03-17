@@ -4,7 +4,7 @@ MPI.Init()
 
 # unit tests
 include("unit/core/test_inputs.jl")
-
+include("unit/core/test_hello.jl")
 
 # functional tests
 include("functional/test_main.jl")
