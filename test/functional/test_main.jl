@@ -1,5 +1,5 @@
-
-using Test, MPI, ArgParse
+import MPI
+import Test: @testset, @test, @test_throws
 
 include("../../src/main.jl")
 

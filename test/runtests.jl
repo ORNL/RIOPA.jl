@@ -1,5 +1,4 @@
-
-using MPI
+import MPI
 
 MPI.Init()
 

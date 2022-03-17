@@ -1,7 +1,5 @@
-using MPI, MLStyle
-
-import RIOPA
-
+import MPI, RIOPA
+import MLStyle: @match
 
 function main(args)::Int32
 
