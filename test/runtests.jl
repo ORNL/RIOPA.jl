@@ -1,6 +1,14 @@
 import MPI
+import Test: @test
 
 MPI.Init()
+
+macro test_exists_and_rm(fn)
+    return quote
+        @test ispath($(esc(fn)))
+        rm($(esc(fn)))
+    end
+end
 
 # unit tests
 include("unit/core/test_inputs.jl")

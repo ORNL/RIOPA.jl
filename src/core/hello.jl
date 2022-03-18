@@ -4,7 +4,6 @@ function hello(config::Config)
     worldrank = getmpiworldrank()
     worldsize = getmpiworldsize()
     transport = config[:io][:transport]
-    println(transport)
     basename = "hello_$worldrank"
     data = "Hello world, I am rank $worldrank of $worldsize\n"
     if (transport == "HDF5")

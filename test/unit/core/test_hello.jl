@@ -3,7 +3,5 @@ import Test: @testset, @test, @test_throws
 
 @testset "hello" begin
     RIOPA.hello(nothing)
-    filename = "hello_0.dat"
-    @test ispath(filename)
-    rm(filename)
+    @test_exists_and_rm("hello_0.h5")
 end
