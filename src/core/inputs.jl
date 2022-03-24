@@ -36,18 +36,60 @@ function read_config(filename::AbstractString = default_config_filename())
     return YAML.load_file(filename, dicttype = LittleDict{Symbol,Any})
 end
 
+read_config(::Nothing) = read_config()
+
 function default_config()
     D = LittleDict{Symbol,Any}
-    config = D(
-        :io => D(
+    config = [
+        D(
+            :dataset => "output",
+            :name => "data 1",
+            :nsteps => 10,
+            :basename => "data_one",
+            :compute_seconds => 0.001,
             :transport => "HDF5",
-            :levels => [
-                D(:level => 1, :size => [1.0e2, 3.0e2]),
-                D(:level => 2, :size => [1.0e4, 3.0e4]),
-                D(:level => 3, :size => [1.0e6, 3.0e6]),
+            :data_streams => [
+                D(
+                    :name => "Level0",
+                    :evolution => "none",
+                    :nprocs_ratio => 0.5,
+                    :proc_payloads => [
+                        D(:size_range => [5, 10], :ratio => 0.06),
+                        D(:size_range => [10, 20], :ratio => 0.94),
+                    ],
+                ),
+                D(
+                    :name => "Level1",
+                    :proc_payloads => [
+                        D(:size_range => [5, 10], :percentage => 6),
+                        D(:size_range => [10, 20], :percentage => 94),
+                    ],
+                ),
             ],
         ),
-    )
+        D(
+            :dataset => "output",
+            :name => "data 2",
+            :nsteps => 10,
+            :basename => "data_two",
+            :data_streams => [
+                D(
+                    :name => "Level0",
+                    :proc_payloads => [
+                        D(:size_range => [5, 10], :ratio => 0.06),
+                        D(:size_range => [10, 20], :ratio => 0.94),
+                    ],
+                ),
+                D(
+                    :name => "Level1",
+                    :proc_payloads => [
+                        D(:size_range => [5, 10], :percentage => 6),
+                        D(:size_range => [10, 20], :percentage => 94),
+                    ],
+                ),
+            ],
+        ),
+    ]
     return config
 end
 
