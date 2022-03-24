@@ -1,4 +1,5 @@
 using MPI
+import MLStyle: @match
 
 function hello(config::Config)
     worldrank = getmpiworldrank()
@@ -6,11 +7,14 @@ function hello(config::Config)
     transport = config[:io][:transport]
     basename = "hello_$worldrank"
     data = "Hello world, I am rank $worldrank of $worldsize\n"
-    if (transport == "HDF5")
-        hello_hdf5(basename, data)
-    else
-        write(basename * ".dat", data)
+
+    @match transport begin
+        "HDF5" => hello_hdf5(basename, data)
+        "ADIOS2" => hello_adios2(basename, data)
+        "Julia" => write(basename * ".dat", data)
+        _ => @error "Unsupported transport strategy"
     end
+
     MPI.Barrier(MPI.COMM_WORLD)
     if worldrank == 0
         println("Hello. We wrote $worldsize file(s).")
