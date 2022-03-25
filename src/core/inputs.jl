@@ -29,7 +29,7 @@ function parse_inputs(args; error_handler = ArgParse.default_handler)
 end
 
 function default_config_filename()
-    return "default.yaml"
+    return "riopa_default.yaml"
 end
 
 function read_config(filename::AbstractString = default_config_filename())
