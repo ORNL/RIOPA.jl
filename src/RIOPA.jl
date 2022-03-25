@@ -20,7 +20,7 @@ getmpiworldsize() = MPI.Comm_size(MPI.COMM_WORLD)
 include("core/inputs.jl")
 include("core/hello.jl")
 
-include("core/transport/adios2.jl")
+# include("core/transport/adios2.jl")
 include("core/transport/hdf5.jl")
 
 end
