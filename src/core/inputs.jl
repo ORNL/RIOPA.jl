@@ -1,6 +1,5 @@
-import ArgParse, YAML, MPI
+import ArgParse, YAML, MPI, OrderedCollections
 import ArgParse: @project_version, @add_arg_table!, parse_args, ArgParseSettings
-import OrderedCollections: LittleDict
 
 function parse_inputs(args; error_handler = ArgParse.default_handler)
     s = ArgParseSettings(
@@ -29,11 +28,13 @@ function parse_inputs(args; error_handler = ArgParse.default_handler)
 end
 
 function default_config_filename()
-    return "default.yaml"
+    return "riopa_default.yaml"
 end
 
+const Config = OrderedCollections.LittleDict{Symbol,Any}
+
 function read_config(filename::AbstractString = default_config_filename())
-    return YAML.load_file(filename, dicttype = LittleDict{Symbol,Any})
+    return YAML.load_file(filename, dicttype = Config)
 end
 
 read_config(::Nothing) = read_config()
@@ -65,6 +66,7 @@ function default_config()
                         D(:size_range => [10, 20], :ratio => 3//4),
                     ],
                 ),
+
             ],
         ),
         D(
