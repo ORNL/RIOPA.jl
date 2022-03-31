@@ -20,14 +20,14 @@ end
 
 @testset "config" begin
     config = RIOPA.default_config()
-    @test config[:io][:transport] == "HDF5"
-    @test config[:io][:levels][3][:size] == [1.0e6, 3.0e6]
+    @test config[1][:transport] == "HDF5"
+    @test config[1][:data_streams][1][:proc_payloads][2][:size_range] ==
+          [10, 20]
+    @test config[1][:data_streams][1][:proc_payloads][2][:ratio] == 0.94
     filename = "testcase-temp-config.yaml"
     RIOPA.generate_config(filename)
     @test ispath(filename)
     config2 = RIOPA.read_config(filename)
-    @test config2[:io][:transport] == "HDF5"
-    @test config2[:io][:levels][3][:size] == [1.0e6, 3.0e6]
     @test config2 == config
     rm(filename)
 end
