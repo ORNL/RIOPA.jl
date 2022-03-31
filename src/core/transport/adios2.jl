@@ -8,6 +8,5 @@ function hello_adios2(data::AbstractString)
     open(io, "hello.bp", ADIOS2.mode_write) do engine
         v = ADIOS2.define_variable(io, "hello", data)
         ADIOS2.put!(engine, v, data)
-        ADIOS2.perform_puts!(engine)
     end
 end
