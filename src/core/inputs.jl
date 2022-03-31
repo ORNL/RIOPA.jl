@@ -40,58 +40,60 @@ end
 read_config(::Nothing) = read_config()
 
 function default_config()
-    D = LittleDict{Symbol,Any}
-    config = [
-        D(
-            :dataset => "output",
-            :name => "data 1",
-            :nsteps => 10,
-            :basename => "data_one",
-            :compute_seconds => 0.001,
-            :transport => "HDF5",
-            :data_streams => [
-                D(
-                    :name => "Level0",
-                    :evolution => "none",
-                    :nprocs_ratio => 0.5,
-                    :proc_payloads => [
-                        D(:size_range => [5, 10], :ratio => 0.06),
-                        D(:size_range => [10, 20], :ratio => 0.94),
-                    ],
-                ),
-                D(
-                    :name => "Level1",
-                    :proc_payloads => [
-                        D(:size_range => [5, 10], :ratio => "1/4"),
-                        D(:size_range => [10, 20], :ratio => "3/4"),
-                    ],
-                ),
+    D = Config
+    config = D(
+        :datasets => [
+            D(
+                :type => "output",
+                :name => "data 1",
+                :nsteps => 10,
+                :basename => "data_one",
+                :compute_seconds => 0.001,
+                :transport => "HDF5",
+                :data_streams => [
+                    D(
+                        :name => "Level0",
+                        :evolution => "none",
+                        :nprocs_ratio => 0.5,
+                        :proc_payloads => [
+                            D(:size_range => [5, 10], :ratio => 0.06),
+                            D(:size_range => [10, 20], :ratio => 0.94),
+                        ],
+                    ),
+                    D(
+                        :name => "Level1",
+                        :proc_payloads => [
+                            D(:size_range => [5, 10], :ratio => "1/4"),
+                            D(:size_range => [10, 20], :ratio => "3/4"),
+                        ],
+                    ),
 
-            ],
-        ),
-        D(
-            :dataset => "output",
-            :name => "data 2",
-            :nsteps => 10,
-            :basename => "data_two",
-            :data_streams => [
-                D(
-                    :name => "Level0",
-                    :proc_payloads => [
-                        D(:size_range => [5, 10], :ratio => 0.06),
-                        D(:size_range => [10, 20], :ratio => 0.94),
-                    ],
-                ),
-                D(
-                    :name => "Level1",
-                    :proc_payloads => [
-                        D(:size_range => [5, 10], :ratio => "1/8"),
-                        D(:size_range => [10, 20], :ratio => "7/8"),
-                    ],
-                ),
-            ],
-        ),
-    ]
+                ],
+            ),
+            D(
+                :type => "output",
+                :name => "data 2",
+                :nsteps => 10,
+                :basename => "data_two",
+                :data_streams => [
+                    D(
+                        :name => "Level0",
+                        :proc_payloads => [
+                            D(:size_range => [5, 10], :ratio => 0.06),
+                            D(:size_range => [10, 20], :ratio => 0.94),
+                        ],
+                    ),
+                    D(
+                        :name => "Level1",
+                        :proc_payloads => [
+                            D(:size_range => [5, 10], :ratio => "1/8"),
+                            D(:size_range => [10, 20], :ratio => "7/8"),
+                        ],
+                    ),
+                ],
+            ),
+        ]
+    )
     return config
 end
 
