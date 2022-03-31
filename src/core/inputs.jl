@@ -61,8 +61,8 @@ function default_config()
                 D(
                     :name => "Level1",
                     :proc_payloads => [
-                        D(:size_range => [5, 10], :percentage => 6),
-                        D(:size_range => [10, 20], :percentage => 94),
+                        D(:size_range => [5, 10], :ratio => 1//4),
+                        D(:size_range => [10, 20], :ratio => 3//4),
                     ],
                 ),
             ],
@@ -83,8 +83,8 @@ function default_config()
                 D(
                     :name => "Level1",
                     :proc_payloads => [
-                        D(:size_range => [5, 10], :percentage => 6),
-                        D(:size_range => [10, 20], :percentage => 94),
+                        D(:size_range => [5, 10], :ratio => 1//8),
+                        D(:size_range => [10, 20], :ratio => 7//8),
                     ],
                 ),
             ],
