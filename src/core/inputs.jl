@@ -11,11 +11,11 @@ function parse_inputs(args; error_handler = ArgParse.default_handler)
     )
     @add_arg_table! s begin
         "hello"
-        help = "Run in hello mode (minimal functionality test)"
+        help = """Run in "hello" mode (minimal functionality)"""
         action = :command
-        "generate-config"
-        help = """Create default config file
-        (as "config.yaml" unless --config option is used)"""
+        "generate-config", "gencfg"
+        help = """Create default configuration file
+        (as "$(default_config_filename())" unless --config option is used)"""
         action = :command
         "--config", "-c"
         help = "Specify name of (YAML) config file to generate I/O"
@@ -37,17 +37,62 @@ function read_config(filename::AbstractString = default_config_filename())
     return YAML.load_file(filename, dicttype = Config)
 end
 
+read_config(::Nothing) = read_config()
+
 function default_config()
-    C = Config
-    config = C(
-        :io => C(
-            :transport => "HDF5",
-            :levels => [
-                C(:level => 1, :size => [1.0e2, 3.0e2]),
-                C(:level => 2, :size => [1.0e4, 3.0e4]),
-                C(:level => 3, :size => [1.0e6, 3.0e6]),
-            ],
-        ),
+    D = Config
+    config = D(
+        :datasets => [
+            D(
+                :type => "output",
+                :name => "data 1",
+                :nsteps => 10,
+                :basename => "data_one",
+                :compute_seconds => 0.001,
+                :transport => "HDF5",
+                :data_streams => [
+                    D(
+                        :name => "Level0",
+                        :evolution => "none",
+                        :nprocs_ratio => 0.5,
+                        :proc_payloads => [
+                            D(:size_range => [5, 10], :ratio => 0.06),
+                            D(:size_range => [10, 20], :ratio => 0.94),
+                        ],
+                    ),
+                    D(
+                        :name => "Level1",
+                        :proc_payloads => [
+                            D(:size_range => [5, 10], :ratio => "1/4"),
+                            D(:size_range => [10, 20], :ratio => "3/4"),
+                        ],
+                    ),
+
+                ],
+            ),
+            D(
+                :type => "output",
+                :name => "data 2",
+                :nsteps => 10,
+                :basename => "data_two",
+                :data_streams => [
+                    D(
+                        :name => "Level0",
+                        :proc_payloads => [
+                            D(:size_range => [5, 10], :ratio => 0.06),
+                            D(:size_range => [10, 20], :ratio => 0.94),
+                        ],
+                    ),
+                    D(
+                        :name => "Level1",
+                        :proc_payloads => [
+                            D(:size_range => [5, 10], :ratio => "1/8"),
+                            D(:size_range => [10, 20], :ratio => "7/8"),
+                        ],
+                    ),
+                ],
+            ),
+        ]
     )
     return config
 end

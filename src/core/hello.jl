@@ -4,7 +4,7 @@ import MLStyle: @match
 function hello(config::Config)
     worldrank = getmpiworldrank()
     worldsize = getmpiworldsize()
-    transport = config[:io][:transport]
+    transport = config[:datasets][1][:transport]
     basename = "hello"
     data = "Hello world, I am rank $worldrank of $worldsize\n"
 
