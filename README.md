@@ -13,6 +13,8 @@ It's helpful to set the following environment variables:
 
 - `JULIA_MPI_PATH=<MPI-installation-prefix>`
 - `JULIA_MPI_BINARY=system`
+- `JULIA_HDF5_PATH=<path-to-HDF5-binaries>` (may be necessary in order to use
+  HDF5 in parallel see [HDF5.jl docs](https://juliaio.github.io/HDF5.jl/stable/#Setting-up-Parallel-HDF5))
 
 In addition, if `mpiexec` is not the proper run command for your system, set the
 environment variable `JULIA_MPI_EXEC` to the desired run command (such as `srun`
