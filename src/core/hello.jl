@@ -11,7 +11,7 @@ function hello(config::Config)
     @match transport begin
         "HDF5" => hello_hdf5(data)
         "ADIOS2" => hello_adios2(data)
-        "Julia" => write(basename * ".dat", data)
+        "Julia" => write(basename * "_$worldrank.dat", data)
         _ => @error "Unsupported transport strategy"
     end
 
