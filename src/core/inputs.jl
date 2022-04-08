@@ -46,10 +46,10 @@ function default_config()
             D(
                 :type => "output",
                 :name => "data 1",
-                :nsteps => 10,
                 :basename => "data_one",
-                :compute_seconds => 0.001,
                 :transport => "HDF5",
+                :nsteps => 10,
+                :compute_seconds => 1.0,
                 :data_streams => [
                     D(
                         :name => "Level0",
@@ -73,8 +73,8 @@ function default_config()
             D(
                 :type => "output",
                 :name => "data 2",
-                :nsteps => 10,
                 :basename => "data_two",
+                :compute_seconds => 3.0,
                 :data_streams => [
                     D(
                         :name => "Level0",

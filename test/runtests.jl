@@ -11,6 +11,7 @@ macro test_exists_and_rm(fn)
 end
 
 # unit tests
+include("unit/core/test_Ctrl.jl")
 include("unit/core/test_inputs.jl")
 include("unit/core/test_hello.jl")
 
