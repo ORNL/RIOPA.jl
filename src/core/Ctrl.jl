@@ -1,41 +1,48 @@
 module Ctrl
 
-import ..Config
-import ..read_config
-import ..default_config
+import ..Config, ..read_config, ..default_config
+import ..DataSet, ..DataSetConfig, ..DataStreamConfig, ..PayloadGroup
+import ..DataGen
+import ..IO
 
-abstract type TagBase end
-function generate_data! end
-function perform_io_step end
-
-struct DataSetConfig
-    name::String
-    datagen_backend_tag::TagBase
-    io_backend_tag::TagBase
-    nsteps::Int
-    compute_seconds::Float64
+function configure_stream(streamCfg::Config)
+    # payloads = PayloadGroup[]
+    # for grpCfg in streamCfg[:proc_payloads]
+    #     ratio = grpCfg[:ratio]
+    #     @show typeof(ratio)
+    # end
+    payloads = map(
+        grpCfg -> PayloadGroup(grpCfg[:size_range], grpCfg[:ratio]),
+        streamCfg[:proc_payloads],
+    )
+    return DataStreamConfig(streamCfg[:name], payloads)
 end
-
-mutable struct DataSet
-    cfg::DataSetConfig
-    curr_step::Int
-    timestamp::Float64
-    data::Vector{Float64}
-end
-
-DataSet(cfg::DataSetConfig) = DataSet(cfg, 1, time(), Float64[])
 
 function configure_dataset(subCfg::Config)
-    compute_seconds = get(subCfg, :compute_seconds, 0.001)
-    return DataSet(
-        DataSetConfig(subCfg[:name], subCfg[:nsteps], compute_seconds),
+    compute_seconds = get(subCfg, :compute_seconds, 0)
+    datagen_tag_str = get(subCfg, :datagen_backend, nothing)
+    io_tag_str = get(subCfg, :io_backend, nothing)
+    streams =
+        map(streamCfg -> configure_stream(streamCfg), subCfg[:data_streams])
+    ds = DataSet(
+        DataSetConfig(
+            subCfg[:name],
+            subCfg[:basename],
+            DataGen.get_tag(datagen_tag_str),
+            IO.get_tag(io_tag_str),
+            subCfg[:nsteps],
+            compute_seconds,
+            streams,
+        ),
     )
+    DataGen.initialize_streams!(ds.cfg.datagen_backend_tag, ds)
+    return ds
 end
 
-generate_data!(ds::DataSet) = generate_data!(ds.cfg.datagen_backend_tag, ds)
+generate_data!(ds::DataSet) = DataGen.generate!(ds.cfg.datagen_backend_tag, ds)
 
 function perform_io_step(ds::DataSet)
-    perform_io_step(ds.cfg.io_backend_tag, ds)
+    IO.perform_step(ds.cfg.io_backend_tag, ds)
     ds.curr_step += 1
     ds.timestamp = time()
 end

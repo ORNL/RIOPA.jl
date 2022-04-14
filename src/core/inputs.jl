@@ -47,7 +47,7 @@ function default_config()
                 :type => "output",
                 :name => "data 1",
                 :basename => "data_one",
-                :transport => "HDF5",
+                :io_backend => "HDF5",
                 :nsteps => 10,
                 :compute_seconds => 1.0,
                 :data_streams => [
@@ -73,7 +73,9 @@ function default_config()
             D(
                 :type => "output",
                 :name => "data 2",
+                :io_backend => "HDF5",
                 :basename => "data_two",
+                :nsteps => 3,
                 :compute_seconds => 3.0,
                 :data_streams => [
                     D(
