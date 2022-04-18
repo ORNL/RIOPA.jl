@@ -17,17 +17,45 @@ function add(key::String, tag::DataGenTag)
 end
 
 function get_tag(key::String)
-    # TODO: check for key ?
-    return tagmap[key]
+    try
+        return tagmap[key]
+    catch
+        println("Invalid DataGen backend: ", key)
+        rethrow()
+    end
 end
 
 struct DefaultDataGenTag <: DataGenTag end
 
 get_tag(::Nothing) = DefaultDataGenTag()
 
+struct ProcessPayloadRatioError <: Exception
+    msg::String
+end
+
+function check_payload_group_ratios(ds::DataSet)
+    for stream_cfg in ds.cfg.streams
+        sum = 0.0
+        for grp in stream_cfg.payload_groups
+            sum += grp.ratio
+        end
+        if !isapprox(sum, 1.0)
+            throw(
+                ProcessPayloadRatioError(
+                    "Sum of payload group ratios ($sum) must equal 1" *
+                    "; dataset: " *
+                    ds.cfg.name *
+                    ", stream: " *
+                    stream_cfg.name,
+                ),
+            )
+        end
+    end
+end
+
 function initialize_streams!(::DefaultDataGenTag, ds::DataSet)
-    ds.streams = map(streamCfg -> DataVector(), ds.cfg.streams)
-    # TODO: check sum of ratios == 1.0
+    check_payload_group_ratios(ds)
+    ds.streams = map(stream_cfg -> DataVector(), ds.cfg.streams)
 end
 
 function get_payload_group_id(cfg::DataStreamConfig)
@@ -58,7 +86,7 @@ end
 function generate!(::DefaultDataGenTag, ds::DataSet)
     # generate data at each stream for current MPI rank
     foreach(
-        ((i, streamCfg),) -> generate_stream_data!(ds.streams[i], streamCfg),
+        ((i, stream_cfg),) -> generate_stream_data!(ds.streams[i], stream_cfg),
         enumerate(ds.cfg.streams),
     )
 end

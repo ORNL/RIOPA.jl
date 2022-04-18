@@ -6,11 +6,6 @@ import ..DataGen
 import ..IO
 
 function configure_stream(streamCfg::Config)
-    # payloads = PayloadGroup[]
-    # for grpCfg in streamCfg[:proc_payloads]
-    #     ratio = grpCfg[:ratio]
-    #     @show typeof(ratio)
-    # end
     payloads = map(
         grpCfg -> PayloadGroup(grpCfg[:size_range], grpCfg[:ratio]),
         streamCfg[:proc_payloads],
