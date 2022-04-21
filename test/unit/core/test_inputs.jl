@@ -23,7 +23,7 @@ end
     @test config[:datasets][1][:io_backend] == "HDF5"
     @test config[:datasets][1][:data_streams][1][:proc_payloads][2][:size_range] ==
           [2000, 2400]
-    @test config[:datasets][1][:data_streams][1][:proc_payloads][2][:ratio] == 0.9
+    @test config[:datasets][1][:data_streams][1][:proc_payloads][2][:ratio] == 0.5
     filename = "testcase-temp-config.yaml"
     RIOPA.generate_config(filename)
     @test ispath(filename)

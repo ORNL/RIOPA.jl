@@ -58,10 +58,8 @@ function initialize_streams!(::DefaultDataGenTag, ds::DataSet)
     ds.streams = map(stream_cfg -> DataVector(), ds.cfg.streams)
 end
 
-function get_payload_group_id(cfg::DataStreamConfig)
-    worldrank = MPI.Comm_rank(MPI.COMM_WORLD)
-    worldsize = MPI.Comm_size(MPI.COMM_WORLD)
-    percentile = (worldrank + 1) / worldsize
+function get_payload_group_id(rank::Int, nranks::Int, cfg::DataStreamConfig)
+    percentile = (rank + 1) / nranks
     current = 0.0
     for id = 1:length(cfg.payload_groups)
         grp = cfg.payload_groups[id]
@@ -70,7 +68,12 @@ function get_payload_group_id(cfg::DataStreamConfig)
             return id
         end
     end
-    # throw an error
+    # TODO: throw an error here ?
+end
+
+function get_payload_group_id(cfg::DataStreamConfig)
+    comm = MPI.COMM_WORLD
+    get_payload_group_id(MPI.Comm_rank(comm), MPI.Comm_size(comm), cfg)
 end
 
 function generate_stream_data!(data::DataVector, cfg::DataStreamConfig)

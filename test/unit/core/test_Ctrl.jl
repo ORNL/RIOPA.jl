@@ -8,9 +8,9 @@ import Test: @testset, @test, @test_throws
 
     @test streamcfg.name == "Level_0"
     @test streamcfg.payload_groups[1].range == (1000, 1200)
-    @test streamcfg.payload_groups[1].ratio == 0.1
+    @test streamcfg.payload_groups[1].ratio == 0.5
     @test streamcfg.payload_groups[2].range == (2000, 2400)
-    @test streamcfg.payload_groups[2].ratio == 0.9
+    @test streamcfg.payload_groups[2].ratio == 0.5
 
     ds = RIOPA.Ctrl.configure_dataset(dscfg_raw)
     @test ds.cfg.name == "data 1"
@@ -23,9 +23,9 @@ import Test: @testset, @test, @test_throws
     streamcfg = ds.cfg.streams[1]
     @test streamcfg.name == "Level_0"
     @test streamcfg.payload_groups[1].range == (1000, 1200)
-    @test streamcfg.payload_groups[1].ratio == 0.1
+    @test streamcfg.payload_groups[1].ratio == 0.5
     @test streamcfg.payload_groups[2].range == (2000, 2400)
-    @test streamcfg.payload_groups[2].ratio == 0.9
+    @test streamcfg.payload_groups[2].ratio == 0.5
     streamcfg = ds.cfg.streams[2]
     @test streamcfg.name == "Level_1"
     @test streamcfg.payload_groups[1].range == (2000, 2500)

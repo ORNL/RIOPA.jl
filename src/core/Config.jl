@@ -29,8 +29,8 @@ function default_config()
                         :evolution => "none",
                         :nprocs_ratio => 0.5,
                         :proc_payloads => [
-                            D(:size_range => [1000, 1200], :ratio => 0.1),
-                            D(:size_range => [2000, 2400], :ratio => 0.9),
+                            D(:size_range => [1000, 1200], :ratio => 0.5),
+                            D(:size_range => [2000, 2400], :ratio => 0.5),
                         ],
                     ),
                     D(
