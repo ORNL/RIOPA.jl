@@ -46,15 +46,19 @@ function steps_remain(ds::DataSet)
     return ds.curr_step <= ds.cfg.nsteps
 end
 
-function run_internal(datasets::Vector{DataSet})
-    cfgtimes = map(ds -> ds.cfg.compute_seconds, datasets)
-    enabled = map(ds -> steps_remain(ds), datasets)
+struct Controller
+    datasets::Vector{DataSet}
+end
+
+function (c::Controller)()
+    cfgtimes = map(ds -> ds.cfg.compute_seconds, c.datasets)
+    enabled = map(ds -> steps_remain(ds), c.datasets)
     get_reset_time = (i, enable) -> enable ? cfgtimes[i] : Inf
     times = map(((i, enable),) -> get_reset_time(i, enable), enumerate(enabled))
     while any(enabled)
         ta = time()
         dur, idx = findmin(times)
-        ds = datasets[idx]
+        ds = c.datasets[idx]
         generate_data!(ds)
         diff = time() - ta
         dur = max(0, dur - diff)
@@ -67,8 +71,8 @@ function run_internal(datasets::Vector{DataSet})
 end
 
 function run(config::Config)
-    datasets = map(sub -> configure_dataset(sub), config[:datasets])
-    run_internal(datasets)
+    ctrl = Controller(map(sub -> configure_dataset(sub), config[:datasets]))
+    ctrl()
 end
 
 run(filename::AbstractString) = run(read_config(filename))

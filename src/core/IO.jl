@@ -14,8 +14,12 @@ function add(key::String, tag::IOTag)
 end
 
 function get_tag(key::String)
-    # TODO: check for key ?
-    return tagmap[key]
+    try
+        return tagmap[key]
+    catch
+        println("Invalid IO backend: ", key)
+        rethrow()
+    end
 end
 
 struct DefaultIOTag <: IOTag end

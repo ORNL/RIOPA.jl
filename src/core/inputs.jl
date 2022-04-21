@@ -52,19 +52,19 @@ function default_config()
                 :compute_seconds => 1.0,
                 :data_streams => [
                     D(
-                        :name => "Level0",
+                        :name => "Level_0",
                         :evolution => "none",
                         :nprocs_ratio => 0.5,
                         :proc_payloads => [
-                            D(:size_range => [5, 10], :ratio => 0.06),
-                            D(:size_range => [10, 20], :ratio => 0.94),
+                            D(:size_range => [1000, 1200], :ratio => 0.1),
+                            D(:size_range => [2000, 2400], :ratio => 0.9),
                         ],
                     ),
                     D(
-                        :name => "Level1",
+                        :name => "Level_1",
                         :proc_payloads => [
-                            D(:size_range => [5, 10], :ratio => "1/4"),
-                            D(:size_range => [10, 20], :ratio => "3/4"),
+                            D(:size_range => [2000, 2500], :ratio => "1/4"),
+                            D(:size_range => [4000, 4800], :ratio => "3/4"),
                         ],
                     ),
 
@@ -79,17 +79,17 @@ function default_config()
                 :compute_seconds => 3.0,
                 :data_streams => [
                     D(
-                        :name => "Level0",
+                        :name => "Level_0",
                         :proc_payloads => [
-                            D(:size_range => [5, 10], :ratio => 0.06),
-                            D(:size_range => [10, 20], :ratio => 0.94),
+                            D(:size_range => [1000, 1200], :ratio => 0.1),
+                            D(:size_range => [2000, 2400], :ratio => 0.9),
                         ],
                     ),
                     D(
-                        :name => "Level1",
+                        :name => "Level_1",
                         :proc_payloads => [
-                            D(:size_range => [5, 10], :ratio => "1/8"),
-                            D(:size_range => [10, 20], :ratio => "7/8"),
+                            D(:size_range => [2000, 2500], :ratio => "1/8"),
+                            D(:size_range => [4000, 4800], :ratio => "7/8"),
                         ],
                     ),
                 ],

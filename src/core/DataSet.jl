@@ -42,6 +42,14 @@ struct DataSetConfig
     streams::Vector{DataStreamConfig}
 end
 
+DataSetConfig(
+    name::String,
+    datagen_tag::TagBase,
+    io_tag::TagBase,
+    nsteps::Int,
+    comp_secs::Float64,
+) = DataSetConfig(name, name, datagen_tag, io_tag, nsteps, comp_secs, [])
+
 abstract type DataObject end
 
 mutable struct DataVector <: DataObject
