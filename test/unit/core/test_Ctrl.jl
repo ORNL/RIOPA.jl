@@ -16,7 +16,7 @@ import Test: @testset, @test, @test_throws
     @test ds.cfg.name == "data 1"
     @test ds.cfg.basename == "data_one"
     @test ds.cfg.datagen_backend_tag == RIOPA.DataGen.DefaultDataGenTag()
-    @test ds.cfg.io_backend_tag == RIOPA.IO.HDF5IOTag()
+    @test ds.cfg.io_backend_tag == RIOPA.HDF5IOTag()
     @test ds.cfg.nsteps == 10
     @test ds.cfg.compute_seconds == 1.0
     @test length(ds.cfg.streams) == 2
@@ -68,8 +68,8 @@ end
     tag1 = TestTag()
     tag3 = TestTag()
     ds_configs = [
-        RIOPA.Ctrl.DataSetConfig("test1", tag1, tag1, 6, 1.0),
-        RIOPA.Ctrl.DataSetConfig("test2", tag3, tag3, 2, 3.0),
+        RIOPA.Ctrl.DataSetConfig("test1", "test1", tag1, tag1, 6, 1.0, []),
+        RIOPA.Ctrl.DataSetConfig("test2", "test2", tag3, tag3, 2, 3.0, []),
     ]
     RIOPA.Ctrl.Controller(map(cfg -> RIOPA.Ctrl.DataSet(cfg), ds_configs))()
 

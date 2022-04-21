@@ -1,24 +1,5 @@
 abstract type TagBase end
 
-########
-# TODO: This should go in a helper function file
-function Base.parse(::Type{Rational{Int}}, x::AbstractString)
-    ms, ns = split(x, '/', keepempty = false)
-    m = parse(Int, ms)
-    n = parse(Int, ns)
-    return m // n
-end
-
-Base.parse(::Type{Rational}, x::AbstractString) = parse(Rational{Int}, x)
-
-function get_ratio(x::AbstractString)
-    r = tryparse(Float64, x)
-    return r === nothing ? convert(Float64, parse(Rational, x)) : r
-end
-
-get_ratio(x::Float64) = x
-########
-
 struct PayloadGroup
     range::NTuple{2,Int}
     ratio::Float64
@@ -41,14 +22,6 @@ struct DataSetConfig
     compute_seconds::Float64
     streams::Vector{DataStreamConfig}
 end
-
-DataSetConfig(
-    name::String,
-    datagen_tag::TagBase,
-    io_tag::TagBase,
-    nsteps::Int,
-    comp_secs::Float64,
-) = DataSetConfig(name, name, datagen_tag, io_tag, nsteps, comp_secs, [])
 
 abstract type DataObject end
 

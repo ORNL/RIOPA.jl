@@ -1,7 +1,5 @@
 module RIOPA
 
-export parse_inputs, read_config, generate_config
-
 import MPI
 
 function __init__()
@@ -14,18 +12,19 @@ function __init__()
     end
 end
 
-getmpiworldrank() = MPI.Comm_rank(MPI.COMM_WORLD)
-getmpiworldsize() = MPI.Comm_size(MPI.COMM_WORLD)
+include("helper/Ratios.jl")
 
-include("core/inputs.jl")
-include("core/hello.jl")
-
+include("core/Config.jl")
+include("core/Args.jl")
 include("core/DataSet.jl")
-include("core/DataGen.jl")
-include("core/IO.jl")
+include("core/DataGen/DataGen.jl")
+include("core/IO/IO.jl")
 include("core/Ctrl.jl")
 
-# include("core/transport/adios2.jl")
-include("core/transport/hdf5.jl")
+include("core/IO/HDF5IOBackend.jl")
+
+# include("hello/adios2.jl")
+include("hello/hdf5.jl")
+include("hello/hello.jl")
 
 end

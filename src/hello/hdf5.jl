@@ -6,11 +6,12 @@ import HDF5, MPI
 
 function hello_hdf5(data::AbstractString)
     basename = "hello"
-    rank = getmpiworldrank()
-    nranks = getmpiworldsize()
+    comm = MPI.COMM_WORLD
+    rank = MPI.Comm_rank(comm)
+    nranks = MPI.Comm_size(comm)
     if HDF5.has_parallel()
         info = MPI.Info()
-        HDF5.h5open(basename * ".h5", "w", MPI.COMM_WORLD, info) do file
+        HDF5.h5open(basename * ".h5", "w", comm, info) do file
             grp = HDF5.create_group(file, "hello")
             dset = HDF5.create_dataset(
                 grp,
