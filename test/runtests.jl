@@ -13,8 +13,9 @@ end
 # unit tests
 include("unit/helper/test_ratios.jl")
 
+include("unit/core/test_Args.jl")
+include("unit/core/test_Config.jl")
 include("unit/core/test_Ctrl.jl")
-include("unit/core/test_inputs.jl")
 include("unit/core/test_DataGen.jl")
 include("unit/core/test_IO.jl")
 

@@ -56,6 +56,7 @@ end
 function initialize_streams!(::DefaultDataGenTag, ds::DataSet)
     check_payload_group_ratios(ds)
     ds.streams = map(stream_cfg -> DataVector(), ds.cfg.streams)
+    # ds.streams = fill(DataVector(), length(ds.cfg.streams))
 end
 
 function get_payload_group_id(rank::Int, nranks::Int, cfg::DataStreamConfig)

@@ -63,7 +63,7 @@ end
     tag1 = TestTag()
     ds_configs =
         [RIOPA.Ctrl.DataSetConfig("test1", "test1", tag1, tag1, 1, 0.25, [])]
-    RIOPA.Ctrl.Controller(map(cfg -> RIOPA.Ctrl.DataSet(cfg), ds_configs))()
+    RIOPA.Ctrl.Controller(map(RIOPA.Ctrl.DataSet, ds_configs))()
 
     tag1 = TestTag()
     tag3 = TestTag()
@@ -71,7 +71,7 @@ end
         RIOPA.Ctrl.DataSetConfig("test1", "test1", tag1, tag1, 6, 1.0, []),
         RIOPA.Ctrl.DataSetConfig("test2", "test2", tag3, tag3, 2, 3.0, []),
     ]
-    RIOPA.Ctrl.Controller(map(cfg -> RIOPA.Ctrl.DataSet(cfg), ds_configs))()
+    RIOPA.Ctrl.Controller(map(RIOPA.Ctrl.DataSet, ds_configs))()
 
     @test tag1.datacount == 6
     for t in tag1.times

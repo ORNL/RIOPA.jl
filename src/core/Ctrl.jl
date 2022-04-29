@@ -17,8 +17,7 @@ function configure_dataset(subCfg::Config)
     compute_seconds = get(subCfg, :compute_seconds, 0)
     datagen_tag_str = get(subCfg, :datagen_backend, nothing)
     io_tag_str = get(subCfg, :io_backend, nothing)
-    streams =
-        map(streamCfg -> configure_stream(streamCfg), subCfg[:data_streams])
+    streams = map(configure_stream, subCfg[:data_streams])
     ds = DataSet(
         DataSetConfig(
             subCfg[:name],
@@ -52,7 +51,7 @@ end
 
 function (c::Controller)()
     cfgtimes = map(ds -> ds.cfg.compute_seconds, c.datasets)
-    enabled = map(ds -> steps_remain(ds), c.datasets)
+    enabled = map(steps_remain, c.datasets)
     get_reset_time = (i, enable) -> enable ? cfgtimes[i] : Inf
     times = map(((i, enable),) -> get_reset_time(i, enable), enumerate(enabled))
     while any(enabled)
@@ -71,7 +70,7 @@ function (c::Controller)()
 end
 
 function run(config::Config)
-    ctrl = Controller(map(sub -> configure_dataset(sub), config[:datasets]))
+    ctrl = Controller(map(configure_dataset, config[:datasets]))
     ctrl()
 end
 
