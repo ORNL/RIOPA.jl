@@ -1,3 +1,9 @@
 include("src/main.jl")
 
-main(ARGS)
+if !isdefined(Base, :active_repl)
+    main(ARGS)
+end
+
+function julia_main()::Cint
+    return main(ARGS)
+end
