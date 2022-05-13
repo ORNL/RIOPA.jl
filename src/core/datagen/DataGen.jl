@@ -1,8 +1,9 @@
 module DataGen
 
-import ..TagBase, ..DataStreamConfig, ..DataSet, ..DataVector
-import ..Config
+# Types
+import RIOPA: TagBase, DataStreamConfig, DataSet, DataVector, Config
 import OrderedCollections: LittleDict
+# Modules
 import MPI
 
 abstract type DataGenTag <: TagBase end
@@ -55,11 +56,14 @@ end
 
 function initialize_streams!(::DefaultDataGenTag, ds::DataSet)
     check_payload_group_ratios(ds)
-    ds.streams = map(stream_cfg -> DataVector(), ds.cfg.streams)
-    # ds.streams = fill(DataVector(), length(ds.cfg.streams))
+    ds.streams = map(_ -> DataVector(), ds.cfg.streams)
 end
 
-function get_payload_group_id(rank::Int, nranks::Int, cfg::DataStreamConfig)
+function get_payload_group_id(
+    rank::Integer,
+    nranks::Integer,
+    cfg::DataStreamConfig,
+)
     percentile = (rank + 1) / nranks
     current = 0.0
     for id = 1:length(cfg.payload_groups)

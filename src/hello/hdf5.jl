@@ -21,7 +21,7 @@ function hello_hdf5(data::AbstractString)
                 chunk = (2, 1),
                 dxpl_mpio = :collective,
             )
-            dset[:, rank + 1] = [rank, nranks]
+            dset[:, rank+1] = [rank, nranks]
         end
     else
         HDF5.h5write(basename * "_$rank.h5", "hello/data", data)

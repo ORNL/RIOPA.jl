@@ -40,7 +40,6 @@ function default_config()
                             D(:size_range => [4000, 4800], :ratio => "3/4"),
                         ],
                     ),
-
                 ],
             ),
             D(
@@ -67,7 +66,7 @@ function default_config()
                     ),
                 ],
             ),
-        ]
+        ],
     )
     return config
 end

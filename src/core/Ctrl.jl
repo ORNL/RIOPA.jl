@@ -1,9 +1,11 @@
 module Ctrl
 
-import ..Config, ..read_config, ..default_config
-import ..DataSet, ..DataSetConfig, ..DataStreamConfig, ..PayloadGroup
-import ..DataGen
-import ..IO
+# Types
+import RIOPA: Config, DataSet, DataSetConfig, DataStreamConfig, PayloadGroup
+# Functions
+import RIOPA: read_config, default_config
+# Modules
+import RIOPA: DataGen, IO
 
 function configure_stream(streamCfg::Config)
     payloads = map(
@@ -35,7 +37,7 @@ end
 
 generate_data!(ds::DataSet) = DataGen.generate!(ds.cfg.datagen_backend_tag, ds)
 
-function perform_io_step(ds::DataSet)
+function perform_io_step!(ds::DataSet)
     IO.perform_step(ds.cfg.io_backend_tag, ds)
     ds.curr_step += 1
     ds.timestamp = time()
@@ -63,7 +65,7 @@ function (c::Controller)()
         dur = max(0, dur - diff)
         sleep(dur)
         times .-= dur
-        perform_io_step(ds)
+        perform_io_step!(ds)
         enabled[idx] = steps_remain(ds)
         times[idx] = get_reset_time(idx, enabled[idx])
     end

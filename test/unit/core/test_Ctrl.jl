@@ -29,13 +29,13 @@ import Test: @testset, @test, @test_throws
     streamcfg = ds.cfg.streams[2]
     @test streamcfg.name == "Level_1"
     @test streamcfg.payload_groups[1].range == (2000, 2500)
-    @test streamcfg.payload_groups[1].ratio == 1//4
+    @test streamcfg.payload_groups[1].ratio == 1 // 4
     @test streamcfg.payload_groups[2].range == (4000, 4800)
-    @test streamcfg.payload_groups[2].ratio == 3//4
+    @test streamcfg.payload_groups[2].ratio == 3 // 4
 end
 
 mutable struct TestTag <: RIOPA.TagBase
-    datacount::Int
+    datacount::Int32
     times::Vector{Float64}
 end
 

@@ -14,9 +14,8 @@ import Test: @testset, @test, @test_throws
             end
         end
 
-        @test run(
-            `$runcmd -n 4 $juliacmd riopa.jl generate-config`,
-        ).exitcode == 0
+        @test run(`$runcmd -n 4 $juliacmd riopa.jl generate-config`).exitcode ==
+              0
         @test_exists_and_rm("riopa_default.yaml")
     end
 end

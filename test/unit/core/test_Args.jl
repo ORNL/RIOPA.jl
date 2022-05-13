@@ -17,9 +17,6 @@ import Test: @testset, @test, @test_throws
 
     @test_throws(
         ArgError("unrecognized option --hey"),
-        RIOPA.parse_inputs(
-            ["--hey"],
-            error_handler = ArgParse.debug_handler,
-        )
+        RIOPA.parse_inputs(["--hey"], error_handler = ArgParse.debug_handler)
     )
 end

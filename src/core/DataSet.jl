@@ -1,7 +1,7 @@
 abstract type TagBase end
 
 struct PayloadGroup
-    range::NTuple{2,Int}
+    range::NTuple{2,Int32}
     ratio::Float64
 end
 
@@ -18,7 +18,7 @@ struct DataSetConfig
     basename::String
     datagen_backend_tag::TagBase
     io_backend_tag::TagBase
-    nsteps::Int
+    nsteps::Int32
     compute_seconds::Float64
     streams::Vector{DataStreamConfig}
 end
@@ -33,7 +33,7 @@ DataVector() = DataVector(Float64[])
 
 mutable struct DataSet
     cfg::DataSetConfig
-    curr_step::Int
+    curr_step::Int32
     timestamp::Float64
     streams::Vector{DataObject}
 end

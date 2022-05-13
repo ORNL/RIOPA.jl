@@ -1,6 +1,7 @@
 module IO
 
-import ..TagBase, ..DataSet
+# Types
+import RIOPA: TagBase, DataSet
 import OrderedCollections: LittleDict
 
 abstract type IOTag <: TagBase end

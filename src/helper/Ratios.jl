@@ -1,11 +1,11 @@
-function Base.parse(::Type{Rational{Int}}, x::AbstractString)
+function Base.parse(::Type{Rational{Int32}}, x::AbstractString)
     ms, ns = split(x, '/', keepempty = false)
-    m = parse(Int, ms)
-    n = parse(Int, ns)
+    m = parse(Int32, ms)
+    n = parse(Int32, ns)
     return m // n
 end
 
-Base.parse(::Type{Rational}, x::AbstractString) = parse(Rational{Int}, x)
+Base.parse(::Type{Rational}, x::AbstractString) = parse(Rational{Int32}, x)
 
 function get_ratio(x::AbstractString)
     r = tryparse(Float64, x)

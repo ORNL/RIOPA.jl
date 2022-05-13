@@ -1,6 +1,6 @@
 import HDF5, MPI
 
-import ..IO
+import RIOPA: IO
 
 struct HDF5IOTag <: IO.IOTag end
 
