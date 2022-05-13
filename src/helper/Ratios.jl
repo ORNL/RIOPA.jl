@@ -1,7 +1,7 @@
-function Base.parse(::Type{Rational{Int32}}, x::AbstractString)
+function Base.parse(::Type{Rational{T}}, x::AbstractString) where {T <: Integer}
     ms, ns = split(x, '/', keepempty = false)
-    m = parse(Int32, ms)
-    n = parse(Int32, ns)
+    m = parse(T, ms)
+    n = parse(T, ns)
     return m // n
 end
 
