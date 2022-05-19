@@ -66,7 +66,7 @@ function get_payload_group_id(
 )
     percentile = (rank + 1) / nranks
     current = 0.0
-    for id = 1:length(cfg.payload_groups)
+    for id in eachindex(cfg.payload_groups)
         grp = cfg.payload_groups[id]
         current += grp.ratio
         if percentile <= current

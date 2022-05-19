@@ -7,7 +7,7 @@ struct HDF5IOTag <: IO.IOTag end
 function perform_step(::HDF5IOTag, ds::DataSet)
     worldrank = MPI.Comm_rank(MPI.COMM_WORLD)
     stepname = ds.cfg.basename * "_" * lpad(ds.curr_step, 5, '0')
-    for i = 1:length(ds.streams)
+    for i in eachindex(ds.streams)
         streamCfg = ds.cfg.streams[i]
         pathname = stepname * "/" * streamCfg.name
         mkpath(pathname)
