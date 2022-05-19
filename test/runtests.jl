@@ -11,22 +11,22 @@ macro test_exists_and_rm(fn)
 end
 
 # unit tests
-include("unit/helper/test_ratios.jl")
+include(joinpath("unit", "helper", "test_ratios.jl"))
 
-include("unit/core/test_Args.jl")
-include("unit/core/test_Config.jl")
-include("unit/core/test_Ctrl.jl")
-include("unit/core/test_DataGen.jl")
-include("unit/core/test_IO.jl")
+include(joinpath("unit", "core", "test_Args.jl"))
+include(joinpath("unit", "core", "test_Config.jl"))
+include(joinpath("unit", "core", "test_Ctrl.jl"))
+include(joinpath("unit", "core", "test_DataGen.jl"))
+include(joinpath("unit", "core", "test_IO.jl"))
 
-include("unit/hello/test_hello.jl")
+include(joinpath("unit", "hello", "test_hello.jl"))
 
 # functional tests
-include("functional/test_main.jl")
+include(joinpath("functional", "test_main.jl"))
 
 # MPI.Finalize() can be called only once per run. We do it here for all
 # "in-process" tests. The cmdline tests are done outside the MPI context since
 # they launch other MPI tasks using system calls
 MPI.Finalize()
 
-include("functional/test_cmdline.jl")
+include(joinpath("functional", "test_cmdline.jl"))
