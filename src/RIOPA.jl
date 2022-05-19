@@ -12,19 +12,19 @@ function __init__()
     end
 end
 
-include("helper/Ratios.jl")
+include(joinpath("helper", "Ratios.jl"))
 
-include("core/Config.jl")
-include("core/Args.jl")
-include("core/DataSet.jl")
-include("core/datagen/DataGen.jl")
-include("core/io/IO.jl")
-include("core/Ctrl.jl")
+include(joinpath("core", "Config.jl"))
+include(joinpath("core", "Args.jl"))
+include(joinpath("core", "DataSet.jl"))
+include(joinpath("core", "datagen", "DataGen.jl"))
+include(joinpath("core", "io", "IO.jl"))
+include(joinpath("core", "Ctrl.jl"))
 
-include("core/io/HDF5IOBackend.jl")
+include(joinpath("core", "io", "HDF5IOBackend.jl"))
 
-# include("hello/adios2.jl")
-include("hello/hdf5.jl")
-include("hello/hello.jl")
+# include(joinpath("hello", "adios2.jl"))
+include(joinpath("hello", "hdf5.jl"))
+include(joinpath("hello", "hello.jl"))
 
 end
