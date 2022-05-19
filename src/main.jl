@@ -10,7 +10,7 @@ function main(args)::Int32
     @match command begin
         "hello" => RIOPA.hello(config_filename)
         "generate-config" => RIOPA.generate_config(config_filename)
-        nothing => println("Normal mode; config file: ", config_filename)
+        nothing => RIOPA.Ctrl.run(config_filename)
     end
 
     return 0

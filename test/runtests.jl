@@ -11,8 +11,15 @@ macro test_exists_and_rm(fn)
 end
 
 # unit tests
-include("unit/core/test_inputs.jl")
-include("unit/core/test_hello.jl")
+include("unit/helper/test_ratios.jl")
+
+include("unit/core/test_Args.jl")
+include("unit/core/test_Config.jl")
+include("unit/core/test_Ctrl.jl")
+include("unit/core/test_DataGen.jl")
+include("unit/core/test_IO.jl")
+
+include("unit/hello/test_hello.jl")
 
 # functional tests
 include("functional/test_main.jl")

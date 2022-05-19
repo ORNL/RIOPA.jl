@@ -6,11 +6,12 @@ import HDF5, MPI
 
 function hello_hdf5(data::AbstractString)
     basename = "hello"
-    rank = getmpiworldrank()
-    nranks = getmpiworldsize()
+    comm = MPI.COMM_WORLD
+    rank = MPI.Comm_rank(comm)
+    nranks = MPI.Comm_size(comm)
     if HDF5.has_parallel()
         info = MPI.Info()
-        HDF5.h5open(basename * ".h5", "w", MPI.COMM_WORLD, info) do file
+        HDF5.h5open(basename * ".h5", "w", comm, info) do file
             grp = HDF5.create_group(file, "hello")
             dset = HDF5.create_dataset(
                 grp,
@@ -20,7 +21,7 @@ function hello_hdf5(data::AbstractString)
                 chunk = (2, 1),
                 dxpl_mpio = :collective,
             )
-            dset[:, rank + 1] = [rank, nranks]
+            dset[:, rank+1] = [rank, nranks]
         end
     else
         HDF5.h5write(basename * "_$rank.h5", "hello/data", data)
