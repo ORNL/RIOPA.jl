@@ -1,9 +1,9 @@
-include("src/main.jl")
-
-if !isdefined(Base, :active_repl)
-    main(ARGS)
-end
+import RIOPA
 
 function julia_main()::Cint
-    return main(ARGS)
+    return RIOPA.main(ARGS)
+end
+
+if !isdefined(Base, :active_repl)
+    julia_main()
 end
