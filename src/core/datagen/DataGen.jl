@@ -1,10 +1,19 @@
 module DataGen
 
 # Types
-import RIOPA: TagBase, DataStreamConfig, DataSet, DataVector, Config
+import RIOPA:
+    TagBase,
+    DataStream,
+    PayloadRange,
+    DataSet,
+    DataVector,
+    Config,
+    EvolutionFunction
 import OrderedCollections: LittleDict
+# Functions
+import RIOPA: get_payload_group_id
 # Modules
-import MPI
+import MPI, Random
 
 abstract type DataGenTag <: TagBase end
 
@@ -56,47 +65,27 @@ end
 
 function initialize_streams!(::DefaultDataGenTag, ds::DataSet)
     check_payload_group_ratios(ds)
-    ds.streams = map(_ -> DataVector(), ds.cfg.streams)
+    ds.streams = map(stream_cfg -> DataStream(stream_cfg), ds.cfg.streams)
 end
 
-function get_payload_group_id(
-    rank::Integer,
-    nranks::Integer,
-    cfg::DataStreamConfig,
-)
-    percentile = (rank + 1) / nranks
-    current = 0.0
-    for id = 1:length(cfg.payload_groups)
-        grp = cfg.payload_groups[id]
-        current += grp.ratio
-        if percentile <= current
-            return id
-        end
-    end
-    # TODO: throw an error here ?
+struct GrowthFactor <: EvolutionFunction
+    x::Float64
 end
 
-function get_payload_group_id(cfg::DataStreamConfig)
-    comm = MPI.COMM_WORLD
-    get_payload_group_id(MPI.Comm_rank(comm), MPI.Comm_size(comm), cfg)
+function evolve_payload_range!(range::PayloadRange, f::GrowthFactor)
+    range.a *= f.x
+    range.b *= f.x
 end
 
-function generate_stream_data!(data::DataVector, cfg::DataStreamConfig)
-    grpid = get_payload_group_id(cfg)
-    grp = cfg.payload_groups[grpid]
-    size = rand(grp.range[1]:grp.range[2])
-    empty!(data.vec)
-    sizehint!(data.vec, size)
-    # TODO: might be performing an avoidable copy
-    append!(data.vec, rand(Float64, size))
+function generate_stream_data!(stream::DataStream)
+    newsize = rand((stream.range.a):(stream.range.b))
+    resize!(stream.data.vec, newsize)
+    Random.rand!(stream.data.vec)
+    evolve_payload_range!(stream.range, stream.evolve)
 end
 
 function generate!(::DefaultDataGenTag, ds::DataSet)
-    # generate data at each stream for current MPI rank
-    foreach(
-        ((i, stream_cfg),) -> generate_stream_data!(ds.streams[i], stream_cfg),
-        enumerate(ds.cfg.streams),
-    )
+    foreach(stream -> generate_stream_data!(stream), ds.streams)
 end
 
 end

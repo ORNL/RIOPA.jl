@@ -8,11 +8,12 @@ import RIOPA: read_config, default_config
 import RIOPA: DataGen, IO
 
 function configure_stream(streamCfg::Config)
-    payloads = map(
+    evolve_func = DataGen.GrowthFactor(get(streamCfg, :evolution, 1.0))
+    groups = map(
         grpCfg -> PayloadGroup(grpCfg[:size_range], grpCfg[:ratio]),
         streamCfg[:proc_payloads],
     )
-    return DataStreamConfig(streamCfg[:name], payloads)
+    return DataStreamConfig(streamCfg[:name], evolve_func, groups)
 end
 
 function configure_dataset(subCfg::Config)
