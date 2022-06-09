@@ -10,10 +10,13 @@ import RIOPA:
     Config,
     EvolutionFunction
 import OrderedCollections: LittleDict
+import Polynomials: ImmutablePolynomial
 # Functions
 import RIOPA: get_payload_group_id
+# Macros
+import MLStyle: @match
 # Modules
-import MPI, Random, MLStyle
+import MPI, Random
 
 abstract type DataGenTag <: TagBase end
 
@@ -84,18 +87,25 @@ function evolve_payload_range!(
     stream.range.b = stream.initial_range.b * growth
 end
 
-struct PolynomialEvFn <: EvolutionFunction end
+struct PolynomialEvFn <: EvolutionFunction
+    poly::ImmutablePolynomial
+end
 
-PolynomialEvFn(params::Vector{<:Real}) = PolynomialEvFn()
+PolynomialEvFn(params::Vector{<:Real}) =
+    PolynomialEvFn(ImmutablePolynomial(vcat(0, params)))
 
 function evolve_payload_range!(
     stream::DataStream,
     step::Integer,
     fn::PolynomialEvFn,
-) end
+)
+    growth = fn.poly(step - 1)
+    stream.range.a = stream.initial_range.a + growth
+    stream.range.b = stream.initial_range.b + growth
+end
 
 function get_evolution_function(evcfg::Config)
-    MLStyle.@match evcfg[:function] begin
+    @match evcfg[:function] begin
         "GrowthFactor" => return GrowthFactorEvFn(evcfg[:params])
         "Polynomial" => return PolynomialEvFn(evcfg[:params])
         _ => @error "Unsupported stream size evolution function"
