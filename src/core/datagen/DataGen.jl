@@ -13,7 +13,7 @@ import OrderedCollections: LittleDict
 # Functions
 import RIOPA: get_payload_group_id
 # Modules
-import MPI, Random
+import MPI, Random, MLStyle
 
 abstract type DataGenTag <: TagBase end
 
@@ -68,24 +68,51 @@ function initialize_streams!(::DefaultDataGenTag, ds::DataSet)
     ds.streams = map(stream_cfg -> DataStream(stream_cfg), ds.cfg.streams)
 end
 
-struct GrowthFactor <: EvolutionFunction
-    x::Float64
+struct GrowthFactorEvFn <: EvolutionFunction
+    factor::Float64
 end
 
-function evolve_payload_range!(range::PayloadRange, f::GrowthFactor)
-    range.a *= f.x
-    range.b *= f.x
+GrowthFactorEvFn(params::Vector{<:Real}) = GrowthFactorEvFn(params[1])
+
+function evolve_payload_range!(
+    stream::DataStream,
+    step::Integer,
+    fn::GrowthFactorEvFn,
+)
+    growth = fn.factor^(step - 1)
+    stream.range.a = stream.initial_range.a * growth
+    stream.range.b = stream.initial_range.b * growth
 end
 
-function generate_stream_data!(stream::DataStream)
+struct PolynomialEvFn <: EvolutionFunction end
+
+PolynomialEvFn(params::Vector{<:Real}) = PolynomialEvFn()
+
+function evolve_payload_range!(
+    stream::DataStream,
+    step::Integer,
+    fn::PolynomialEvFn,
+) end
+
+function get_evolution_function(evcfg::Config)
+    MLStyle.@match evcfg[:function] begin
+        "GrowthFactor" => return GrowthFactorEvFn(evcfg[:params])
+        "Polynomial" => return PolynomialEvFn(evcfg[:params])
+        _ => @error "Unsupported stream size evolution function"
+    end
+end
+
+get_evolution_function(nothing) = GrowthFactorEvFn(1.0)
+
+function generate_stream_data!(stream::DataStream, step::Integer)
     newsize = rand((stream.range.a):(stream.range.b))
     resize!(stream.data.vec, newsize)
     Random.rand!(stream.data.vec)
-    evolve_payload_range!(stream.range, stream.evolve)
+    evolve_payload_range!(stream, step, stream.evolve)
 end
 
 function generate!(::DefaultDataGenTag, ds::DataSet)
-    foreach(stream -> generate_stream_data!(stream), ds.streams)
+    foreach(stream -> generate_stream_data!(stream, ds.curr_step), ds.streams)
 end
 
 end

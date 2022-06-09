@@ -7,6 +7,10 @@ end
 
 # PayloadRange(r::NTuple{2,<:Integer}) = PayloadRange(r[1], r[2])
 
+function Base.copy(r::PayloadRange)
+    return PayloadRange(r.a, r.b)
+end
+
 function Base.:(==)(r::PayloadRange, t::NTuple{2,<:Integer})
     return r.a == t[1] && r.b == t[2]
 end
@@ -59,12 +63,13 @@ DataVector() = DataVector(Float64[])
 
 mutable struct DataStream
     range::PayloadRange
+    initial_range::PayloadRange
     evolve::EvolutionFunction
     data::DataObject
 end
 
-DataStream(cfg::DataStreamConfig) = DataStream(
-    cfg.payload_groups[get_payload_group_id(cfg)].range,
-    cfg.evolve,
-    DataVector(),
-)
+DataStream(range::PayloadRange, evolve::EvolutionFunction) =
+    DataStream(range, copy(range), evolve, DataVector())
+
+DataStream(cfg::DataStreamConfig) =
+    DataStream(cfg.payload_groups[get_payload_group_id(cfg)].range, cfg.evolve)

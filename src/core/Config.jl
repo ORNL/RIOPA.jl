@@ -26,7 +26,10 @@ function default_config()
                 :data_streams => [
                     D(
                         :name => "Level_0",
-                        :evolution => 2.0,
+                        :evolution => D(
+                            :function => "GrowthFactor",
+                            :params => [2.0],
+                        ),
                         :nprocs_ratio => 0.5,
                         :proc_payloads => [
                             D(:size_range => [1000, 1200], :ratio => 0.5),
@@ -35,7 +38,10 @@ function default_config()
                     ),
                     D(
                         :name => "Level_1",
-                        :evolution => 1.5,
+                        :evolution => D(
+                            :function => "Polynomial",
+                            :params => [0.0, 1.0],
+                        ),
                         :proc_payloads => [
                             D(:size_range => [2000, 2500], :ratio => "1/4"),
                             D(:size_range => [4000, 4800], :ratio => "3/4"),
