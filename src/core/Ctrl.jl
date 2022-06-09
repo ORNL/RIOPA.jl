@@ -3,13 +3,12 @@ module Ctrl
 # Types
 import RIOPA: Config, DataSet, DataSetConfig, DataStreamConfig, PayloadGroup
 # Functions
-import RIOPA: read_config, default_config
+import RIOPA: read_config, default_config, get_evolution_function
 # Modules
 import RIOPA: DataGen, IO
 
 function configure_stream(stream_cfg::Config)
-    evolve_func =
-        DataGen.get_evolution_function(get(stream_cfg, :evolution, nothing))
+    evolve_func = get_evolution_function(get(stream_cfg, :evolution, nothing))
     groups = map(
         grp_cfg -> PayloadGroup(grp_cfg[:size_range], grp_cfg[:ratio]),
         stream_cfg[:proc_payloads],

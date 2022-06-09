@@ -5,16 +5,10 @@ import RIOPA:
     TagBase,
     DataStream,
     PayloadRange,
-    DataSet,
-    DataVector,
-    Config,
-    EvolutionFunction
+    DataSet
 import OrderedCollections: LittleDict
-import Polynomials: ImmutablePolynomial
 # Functions
-import RIOPA: get_payload_group_id
-# Macros
-import MLStyle: @match
+import RIOPA: evolve_payload_range!
 # Modules
 import MPI, Random
 
@@ -71,54 +65,11 @@ function initialize_streams!(::DefaultDataGenTag, ds::DataSet)
     ds.streams = map(stream_cfg -> DataStream(stream_cfg), ds.cfg.streams)
 end
 
-struct GrowthFactorEvFn <: EvolutionFunction
-    factor::Float64
-end
-
-GrowthFactorEvFn(params::Vector{<:Real}) = GrowthFactorEvFn(params[1])
-
-function evolve_payload_range!(
-    stream::DataStream,
-    step::Integer,
-    fn::GrowthFactorEvFn,
-)
-    growth = fn.factor^(step - 1)
-    stream.range.a = stream.initial_range.a * growth
-    stream.range.b = stream.initial_range.b * growth
-end
-
-struct PolynomialEvFn <: EvolutionFunction
-    poly::ImmutablePolynomial
-end
-
-PolynomialEvFn(params::Vector{<:Real}) =
-    PolynomialEvFn(ImmutablePolynomial(vcat(0, params)))
-
-function evolve_payload_range!(
-    stream::DataStream,
-    step::Integer,
-    fn::PolynomialEvFn,
-)
-    growth = fn.poly(step - 1)
-    stream.range.a = stream.initial_range.a + growth
-    stream.range.b = stream.initial_range.b + growth
-end
-
-function get_evolution_function(evcfg::Config)
-    @match evcfg[:function] begin
-        "GrowthFactor" => return GrowthFactorEvFn(evcfg[:params])
-        "Polynomial" => return PolynomialEvFn(evcfg[:params])
-        _ => @error "Unsupported stream size evolution function"
-    end
-end
-
-get_evolution_function(nothing) = GrowthFactorEvFn(1.0)
-
 function generate_stream_data!(stream::DataStream, step::Integer)
     newsize = rand((stream.range.a):(stream.range.b))
     resize!(stream.data.vec, newsize)
     Random.rand!(stream.data.vec)
-    evolve_payload_range!(stream, step, stream.evolve)
+    evolve_payload_range!(stream, step)
 end
 
 function generate!(::DefaultDataGenTag, ds::DataSet)

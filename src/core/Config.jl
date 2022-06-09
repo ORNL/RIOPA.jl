@@ -39,8 +39,8 @@ function default_config()
                     D(
                         :name => "Level_1",
                         :evolution => D(
-                            :function => "Polynomial",
-                            :params => [0.0, 1.0],
+                            :function => "GrowthFactor",
+                            :params => [1.5],
                         ),
                         :proc_payloads => [
                             D(:size_range => [2000, 2500], :ratio => "1/4"),

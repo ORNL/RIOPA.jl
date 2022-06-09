@@ -1,3 +1,8 @@
+# Functions
+import Polynomials: ImmutablePolynomial
+# Macros
+import MLStyle: @match
+# Modules
 import MPI
 
 mutable struct PayloadRange
@@ -62,8 +67,8 @@ end
 DataVector() = DataVector(Float64[])
 
 mutable struct DataStream
-    range::PayloadRange
     initial_range::PayloadRange
+    range::PayloadRange
     evolve::EvolutionFunction
     data::DataObject
 end
@@ -73,3 +78,59 @@ DataStream(range::PayloadRange, evolve::EvolutionFunction) =
 
 DataStream(cfg::DataStreamConfig) =
     DataStream(cfg.payload_groups[get_payload_group_id(cfg)].range, cfg.evolve)
+
+struct GrowthFactorEvFn <: EvolutionFunction
+    factor::Float64
+end
+
+GrowthFactorEvFn(params::Vector{<:Real}) = GrowthFactorEvFn(params[1])
+
+function evolve_payload_range!(
+    stream::DataStream,
+    step::Integer,
+    fn::GrowthFactorEvFn,
+)
+    growth = fn.factor^step
+    stream.range.a = round(stream.initial_range.a * growth)
+    stream.range.b = round(stream.initial_range.b * growth)
+end
+
+struct PolynomialEvFn <: EvolutionFunction
+    poly::ImmutablePolynomial
+end
+
+PolynomialEvFn(params::Vector{<:Real}) =
+    PolynomialEvFn(ImmutablePolynomial(vcat(0, params)))
+
+function evolve_payload_range!(
+    stream::DataStream,
+    step::Integer,
+    fn::PolynomialEvFn,
+)
+    growth = fn.poly(step)
+    stream.range.a = stream.initial_range.a + growth
+    stream.range.b = stream.initial_range.b + growth
+end
+
+function evolve_payload_range!(stream::DataStream, step::Integer)
+    evolve_payload_range!(stream, step, stream.evolve)
+end
+
+function check_length(expected::Integer, params::Vector{<:Real})
+    if length(params) != expected
+        @error "Wrong number of parameters"
+    end
+    return params
+end
+
+function get_evolution_function(evcfg::Config)
+    params = evcfg[:params]
+    @match evcfg[:function] begin
+        "GrowthFactor" => return GrowthFactorEvFn(check_length(1, params))
+        "Polynomial" => return PolynomialEvFn(params)
+        "Linear" => return PolynomialEvFn(check_length(1, params))
+        _ => @error "Unsupported stream size evolution function"
+    end
+end
+
+get_evolution_function(nothing) = GrowthFactorEvFn(1.0)

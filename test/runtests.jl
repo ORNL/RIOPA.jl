@@ -16,6 +16,7 @@ include(joinpath("unit", "helper", "test_ratios.jl"))
 include(joinpath("unit", "core", "test_Args.jl"))
 include(joinpath("unit", "core", "test_Config.jl"))
 include(joinpath("unit", "core", "test_Ctrl.jl"))
+include(joinpath("unit", "core", "test_DataStream.jl"))
 include(joinpath("unit", "core", "test_DataGen.jl"))
 include(joinpath("unit", "core", "test_IO.jl"))
 
