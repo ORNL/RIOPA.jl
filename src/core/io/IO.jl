@@ -6,6 +6,7 @@ import OrderedCollections: LittleDict
 
 abstract type IOTag <: TagBase end
 
+function write_data_object end
 function perform_step end
 
 tagmap = LittleDict{String,IOTag}()

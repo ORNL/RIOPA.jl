@@ -20,7 +20,7 @@ function default_config()
                 :type => "output",
                 :name => "data 1",
                 :basename => "data_one",
-                :io_backend => "IOStream",
+                :io_backend => "HDF5",
                 :nsteps => 10,
                 :compute_seconds => 1.0,
                 :data_streams => [
