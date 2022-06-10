@@ -12,12 +12,12 @@ function perform_step end
 tagmap = LittleDict{String,IOTag}()
 
 function add(key::String, tag::IOTag)
-    tagmap[key] = tag
+    tagmap[lowercase(key)] = tag
 end
 
 function get_tag(key::String)
     try
-        return tagmap[key]
+        return tagmap[lowercase(key)]
     catch
         println("Invalid IO backend: ", key)
         rethrow()

@@ -14,12 +14,12 @@ function initialize_streams! end
 tagmap = LittleDict{String,DataGenTag}()
 
 function add(key::String, tag::DataGenTag)
-    tagmap[key] = tag
+    tagmap[lowercase(key)] = tag
 end
 
 function get_tag(key::String)
     try
-        return tagmap[key]
+        return tagmap[lowercase(key)]
     catch
         println("Invalid DataGen backend: ", key)
         rethrow()
