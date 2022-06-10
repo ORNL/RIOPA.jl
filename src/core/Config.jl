@@ -20,7 +20,7 @@ function default_config()
                 :type => "output",
                 :name => "data 1",
                 :basename => "data_one",
-                :io_backend => "HDF5",
+                :io_backend => "IOStream",
                 :nsteps => 10,
                 :compute_seconds => 1.0,
                 :data_streams => [
@@ -45,7 +45,7 @@ function default_config()
             D(
                 :type => "output",
                 :name => "data 2",
-                :io_backend => "HDF5",
+                :io_backend => "IOStream",
                 :basename => "data_two",
                 :nsteps => 3,
                 :compute_seconds => 3.0,
@@ -61,7 +61,7 @@ function default_config()
                         :name => "Level_1",
                         :proc_payloads => [
                             D(:size_range => [2000, 2500], :ratio => "1/8"),
-                            D(:size_range => [4000, 4800], :ratio => "7/8"),
+                            D(:size_range => [400000, 480000], :ratio => "7/8"),
                         ],
                     ),
                 ],
