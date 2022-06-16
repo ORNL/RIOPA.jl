@@ -1,11 +1,7 @@
 module DataGen
 
 # Types
-import RIOPA:
-    TagBase,
-    DataStream,
-    PayloadRange,
-    DataSet
+import RIOPA: TagBase, DataStream, PayloadRange, DataSet
 import OrderedCollections: LittleDict
 # Functions
 import RIOPA: evolve_payload_range!
@@ -65,15 +61,23 @@ function initialize_streams!(::DefaultDataGenTag, ds::DataSet)
     ds.streams = map(stream_cfg -> DataStream(stream_cfg), ds.cfg.streams)
 end
 
-function generate_stream_data!(stream::DataStream, step::Integer)
+function generate_stream_data!(
+    stream::DataStream,
+    step::Integer,
+    step_factor::Integer,
+)
     newsize = rand((stream.range.a):(stream.range.b))
     resize!(stream.data.vec, newsize)
     Random.rand!(stream.data.vec)
-    evolve_payload_range!(stream, step)
+    evolve_payload_range!(stream, step * step_factor)
 end
 
 function generate!(::DefaultDataGenTag, ds::DataSet)
-    foreach(stream -> generate_stream_data!(stream, ds.curr_step), ds.streams)
+    foreach(
+        stream ->
+            generate_stream_data!(stream, ds.curr_step, ds.cfg.step_factor),
+        ds.streams,
+    )
 end
 
 end

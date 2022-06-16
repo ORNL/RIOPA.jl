@@ -6,6 +6,7 @@ struct DataSetConfig
     datagen_backend_tag::TagBase
     io_backend_tag::TagBase
     nsteps::Int32
+    step_factor::Int32
     compute_seconds::Float64
     streams::Vector{DataStreamConfig}
 end

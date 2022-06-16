@@ -20,6 +20,7 @@ function configure_dataset(sub_cfg::Config)
     compute_seconds = get(sub_cfg, :compute_seconds, 0)
     datagen_tag_str = get(sub_cfg, :datagen_backend, nothing)
     io_tag_str = get(sub_cfg, :io_backend, nothing)
+    step_factor = get(sub_cfg, :step_conversion_factor, 1)
     streams = map(configure_stream, sub_cfg[:data_streams])
     ds = DataSet(
         DataSetConfig(
@@ -28,6 +29,7 @@ function configure_dataset(sub_cfg::Config)
             DataGen.get_tag(datagen_tag_str),
             IO.get_tag(io_tag_str),
             sub_cfg[:nsteps],
+            step_factor,
             compute_seconds,
             streams,
         ),
