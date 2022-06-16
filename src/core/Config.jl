@@ -61,7 +61,7 @@ function default_config()
                         :name => "Level_1",
                         :proc_payloads => [
                             D(:size_range => [2000, 2500], :ratio => "1/8"),
-                            D(:size_range => [400000, 480000], :ratio => "7/8"),
+                            D(:size_range => [4000, 4800], :ratio => "7/8"),
                         ],
                     ),
                 ],
