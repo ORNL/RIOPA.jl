@@ -22,11 +22,15 @@ function default_config()
                 :basename => "data_one",
                 :io_backend => "HDF5",
                 :nsteps => 10,
+                :step_conversion_factor => 10,
                 :compute_seconds => 1.0,
                 :data_streams => [
                     D(
                         :name => "Level_0",
-                        :evolution => "none",
+                        :evolution => D(
+                            :function => "GrowthFactor",
+                            :params => [1.072],
+                        ),
                         :nprocs_ratio => 0.5,
                         :proc_payloads => [
                             D(:size_range => [1000, 1200], :ratio => 0.5),
@@ -35,6 +39,10 @@ function default_config()
                     ),
                     D(
                         :name => "Level_1",
+                        :evolution => D(
+                            :function => "GrowthFactor",
+                            :params => [1.013],
+                        ),
                         :proc_payloads => [
                             D(:size_range => [2000, 2500], :ratio => "1/4"),
                             D(:size_range => [4000, 4800], :ratio => "3/4"),
@@ -48,6 +56,7 @@ function default_config()
                 :io_backend => "HDF5",
                 :basename => "data_two",
                 :nsteps => 3,
+                :step_conversion_factor => 30,
                 :compute_seconds => 3.0,
                 :data_streams => [
                     D(

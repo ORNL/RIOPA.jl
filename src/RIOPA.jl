@@ -16,6 +16,7 @@ include(joinpath("helper", "Ratios.jl"))
 
 include(joinpath("core", "Config.jl"))
 include(joinpath("core", "Args.jl"))
+include(joinpath("core", "DataStream.jl"))
 include(joinpath("core", "DataSet.jl"))
 include(joinpath("core", "datagen", "DataGen.jl"))
 include(joinpath("core", "io", "IO.jl"))
