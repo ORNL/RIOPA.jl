@@ -1,12 +1,12 @@
 name: CI GitHub Runners
 
-on:
- push :
-  branches:
-  - main
- pull_request:
-  branches:
-  - main
+on: 
+  push:
+    branches: 
+    - main
+  pull_request:
+    branches: 
+    - main 
 
 jobs:
   linux:
@@ -20,12 +20,10 @@ jobs:
       matrix:
         jobname: [
           ubuntu20-julia1.7.3]
-
-   steps:
+    
+    steps:
     - name: Verify Julia
       run: julia --version
-      
+
     - name: Checkout Action
       uses: actions/checkout@v3   #v3 is the latest 
-  
-  
