@@ -62,14 +62,14 @@ end
     # Run once to get rid of compiler time
     tag1 = TestTag()
     ds_configs =
-        [RIOPA.Ctrl.DataSetConfig("test1", "test1", tag1, tag1, 1, 0.25, [])]
+        [RIOPA.Ctrl.DataSetConfig("test1", "test1", tag1, tag1, 1, 1, 0.25, [])]
     RIOPA.Ctrl.Controller(map(RIOPA.Ctrl.DataSet, ds_configs))()
 
     tag1 = TestTag()
     tag3 = TestTag()
     ds_configs = [
-        RIOPA.Ctrl.DataSetConfig("test1", "test1", tag1, tag1, 6, 1.0, []),
-        RIOPA.Ctrl.DataSetConfig("test2", "test2", tag3, tag3, 2, 3.0, []),
+        RIOPA.Ctrl.DataSetConfig("test1", "test1", tag1, tag1, 6, 1, 1.0, []),
+        RIOPA.Ctrl.DataSetConfig("test2", "test2", tag3, tag3, 2, 1, 3.0, []),
     ]
     RIOPA.Ctrl.Controller(map(RIOPA.Ctrl.DataSet, ds_configs))()
 

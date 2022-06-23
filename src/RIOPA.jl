@@ -22,7 +22,8 @@ include(joinpath("core", "datagen", "DataGen.jl"))
 include(joinpath("core", "io", "IO.jl"))
 include(joinpath("core", "Ctrl.jl"))
 
-include(joinpath("core", "io", "HDF5IOBackend.jl"))
+include(joinpath("core", "io", "HDF5Backend.jl"))
+include(joinpath("core", "io", "IOStreamBackend.jl"))
 
 # include(joinpath("hello", "adios2.jl"))
 include(joinpath("hello", "hdf5.jl"))
