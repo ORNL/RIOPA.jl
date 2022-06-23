@@ -3,30 +3,33 @@ module Ctrl
 # Types
 import RIOPA: Config, DataSet, DataSetConfig, DataStreamConfig, PayloadGroup
 # Functions
-import RIOPA: read_config, default_config
+import RIOPA: read_config, default_config, get_evolution_function
 # Modules
 import RIOPA: DataGen, IO
 
-function configure_stream(streamCfg::Config)
-    payloads = map(
-        grpCfg -> PayloadGroup(grpCfg[:size_range], grpCfg[:ratio]),
-        streamCfg[:proc_payloads],
+function configure_stream(stream_cfg::Config)
+    evolve_func = get_evolution_function(get(stream_cfg, :evolution, nothing))
+    groups = map(
+        grp_cfg -> PayloadGroup(grp_cfg[:size_range], grp_cfg[:ratio]),
+        stream_cfg[:proc_payloads],
     )
-    return DataStreamConfig(streamCfg[:name], payloads)
+    return DataStreamConfig(stream_cfg[:name], evolve_func, groups)
 end
 
-function configure_dataset(subCfg::Config)
-    compute_seconds = get(subCfg, :compute_seconds, 0)
-    datagen_tag_str = get(subCfg, :datagen_backend, nothing)
-    io_tag_str = get(subCfg, :io_backend, nothing)
-    streams = map(configure_stream, subCfg[:data_streams])
+function configure_dataset(sub_cfg::Config)
+    compute_seconds = get(sub_cfg, :compute_seconds, 0)
+    datagen_tag_str = get(sub_cfg, :datagen_backend, nothing)
+    io_tag_str = get(sub_cfg, :io_backend, nothing)
+    step_factor = get(sub_cfg, :step_conversion_factor, 1)
+    streams = map(configure_stream, sub_cfg[:data_streams])
     ds = DataSet(
         DataSetConfig(
-            subCfg[:name],
-            subCfg[:basename],
+            sub_cfg[:name],
+            sub_cfg[:basename],
             DataGen.get_tag(datagen_tag_str),
             IO.get_tag(io_tag_str),
-            subCfg[:nsteps],
+            sub_cfg[:nsteps],
+            step_factor,
             compute_seconds,
             streams,
         ),

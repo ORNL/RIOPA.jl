@@ -1,0 +1,29 @@
+name: CI GitHub Runners
+
+on: 
+  push:
+    branches: 
+    - main
+  pull_request:
+    branches: 
+    - main 
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    container: ${{ matrix.container }}
+    env:
+      GH_JOBNAME: ${{ matrix.jobname }}
+      GH_OS: Linux
+    strategy:
+      fail-fast: false 
+      matrix:
+        jobname: [
+          ubuntu20-julia1.7.3]
+    
+    steps:
+    - name: Verify Julia
+      run: julia --version
+
+    - name: Checkout Action
+      uses: actions/checkout@v3   #v3 is the latest 

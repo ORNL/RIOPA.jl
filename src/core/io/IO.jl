@@ -14,7 +14,7 @@ function perform_step(iotag::IOTag, ds::DataSet)
         stream_cfg = ds.cfg.streams[i]
         pathname = stepname * "/" * stream_cfg.name
         mkpath(pathname)
-        write_data_object(iotag, pathname, ds.streams[i])
+        write_data_object(iotag, pathname, ds.streams[i].data)
     end
 end
 
