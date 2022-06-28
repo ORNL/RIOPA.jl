@@ -27,3 +27,12 @@ jobs:
 
     - name: Checkout Action
       uses: actions/checkout@v3   #v3 is the latest 
+    
+    - name: Instantiate 
+      run: |
+       echo $GITHUB_WORKSPACE 
+       cd $GITHUB_WORKSPACE 
+       julia --project -e 'using Pkg; Pkg.instantiate();'
+    
+    - name: Test
+      run: julia --project test/runtests.jl
