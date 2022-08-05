@@ -10,10 +10,15 @@ import RIOPA: DataGen, IO
 function configure_stream(stream_cfg::Config)
     evolve_func = get_evolution_function(get(stream_cfg, :evolution, nothing))
     groups = map(
-        grp_cfg -> PayloadGroup(grp_cfg[:size_range], grp_cfg[:ratio]),
-        stream_cfg[:proc_payloads],
+        grp_cfg -> PayloadGroup(grp_cfg[:size_ratio], grp_cfg[:proc_ratio]),
+        stream_cfg[:proc_payload_groups],
     )
-    return DataStreamConfig(stream_cfg[:name], evolve_func, groups)
+    return DataStreamConfig(
+        stream_cfg[:name],
+        stream_cfg[:initial_size_range],
+        evolve_func,
+        groups,
+    )
 end
 
 function configure_dataset(sub_cfg::Config)

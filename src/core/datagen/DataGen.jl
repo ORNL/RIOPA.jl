@@ -32,10 +32,6 @@ struct DefaultDataGenTag <: DataGenTag end
 
 get_tag(::Nothing) = DefaultDataGenTag()
 
-struct ProcessPayloadRatioError <: Exception
-    msg::String
-end
-
 function check_payload_group_ratios(ds::DataSet)
     for stream_cfg in ds.cfg.streams
         sum = 0.0
@@ -43,21 +39,17 @@ function check_payload_group_ratios(ds::DataSet)
             sum += grp.ratio
         end
         if !isapprox(sum, 1.0)
-            throw(
-                ProcessPayloadRatioError(
-                    "Sum of payload group ratios ($sum) must equal 1" *
-                    "; dataset: " *
-                    ds.cfg.name *
-                    ", stream: " *
-                    stream_cfg.name,
-                ),
-            )
+            @error "Sum of ratios ($sum) must equal 1; dataset: " *
+                   ds.cfg.name *
+                   ", stream: " *
+                   stream_cfg.name
         end
     end
 end
 
 function initialize_streams!(::DefaultDataGenTag, ds::DataSet)
-    check_payload_group_ratios(ds)
+    # FIXME
+    # check_payload_group_ratios(ds)
     ds.streams = map(stream_cfg -> DataStream(stream_cfg), ds.cfg.streams)
 end
 

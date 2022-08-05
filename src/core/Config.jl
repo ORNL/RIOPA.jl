@@ -27,11 +27,11 @@ function default_config()
                 :data_streams => [
                     D(
                         :name => "Level_0",
+                        :initial_size_range => [3000, 3600],
                         :evolution => D(
                             :function => "GrowthFactor",
                             :params => [1.0718],
                         ),
-                        :nprocs_ratio => 0.5,
                         :proc_payloads => [
                             D(:size_range => [1000, 1200], :ratio => 0.5),
                             D(:size_range => [2000, 2400], :ratio => 0.5),
