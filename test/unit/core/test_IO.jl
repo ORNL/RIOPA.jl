@@ -11,7 +11,7 @@ struct TestIOTag <: RIOPA.IO.IOTag end
 end
 
 @testset "IO Backends" begin
-    data = RIOPA.DataVector(rand(Float64, 10))
+    data = RIOPA.DataVector(rand(Int8, 80))
     @test RIOPA.IO.get_tag("HDF5") == RIOPA.HDF5IOTag()
     @test RIOPA.IO.get_tag("hdf5") == RIOPA.HDF5IOTag()
     RIOPA.IO.write_data_object(RIOPA.HDF5IOTag(), pwd(), data)

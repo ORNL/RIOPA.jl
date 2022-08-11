@@ -7,10 +7,11 @@ import Test: @testset, @test, @test_throws
     streamcfg = RIOPA.Ctrl.configure_stream(dscfg_raw[:data_streams][1])
 
     @test streamcfg.name == "Level_0"
-    @test streamcfg.payload_groups[1].range == (1000, 1200)
-    @test streamcfg.payload_groups[1].ratio == 0.5
-    @test streamcfg.payload_groups[2].range == (2000, 2400)
-    @test streamcfg.payload_groups[2].ratio == 0.5
+    @test streamcfg.initial_size_range == (3000, 3600)
+    @test streamcfg.payload_groups[1].size_ratio == 1.0/3.0
+    @test streamcfg.payload_groups[1].proc_ratio == 0.5
+    @test streamcfg.payload_groups[2].size_ratio == 2.0/3.0
+    @test streamcfg.payload_groups[2].proc_ratio == 0.5
 
     ds = RIOPA.Ctrl.configure_dataset(dscfg_raw)
     @test ds.cfg.name == "data 1"
@@ -22,16 +23,18 @@ import Test: @testset, @test, @test_throws
     @test length(ds.cfg.streams) == 2
     streamcfg = ds.cfg.streams[1]
     @test streamcfg.name == "Level_0"
-    @test streamcfg.payload_groups[1].range == (1000, 1200)
-    @test streamcfg.payload_groups[1].ratio == 0.5
-    @test streamcfg.payload_groups[2].range == (2000, 2400)
-    @test streamcfg.payload_groups[2].ratio == 0.5
+    @test streamcfg.initial_size_range == (3000, 3600)
+    @test streamcfg.payload_groups[1].size_ratio == 1.0/3.0
+    @test streamcfg.payload_groups[1].proc_ratio == 0.5
+    @test streamcfg.payload_groups[2].size_ratio == 2.0/3.0
+    @test streamcfg.payload_groups[2].proc_ratio == 0.5
     streamcfg = ds.cfg.streams[2]
     @test streamcfg.name == "Level_1"
-    @test streamcfg.payload_groups[1].range == (2000, 2500)
-    @test streamcfg.payload_groups[1].ratio == 1 // 4
-    @test streamcfg.payload_groups[2].range == (4000, 4800)
-    @test streamcfg.payload_groups[2].ratio == 3 // 4
+    @test streamcfg.initial_size_range == (6000, 7300)
+    @test streamcfg.payload_groups[1].size_ratio == 1.0/3.0
+    @test streamcfg.payload_groups[1].proc_ratio == 1 // 4
+    @test streamcfg.payload_groups[2].size_ratio == 2.0/3.0
+    @test streamcfg.payload_groups[2].proc_ratio == 3 // 4
 end
 
 mutable struct TestTag <: RIOPA.TagBase

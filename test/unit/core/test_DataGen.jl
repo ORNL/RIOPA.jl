@@ -39,8 +39,9 @@ struct TestDataGenTag <: RIOPA.DataGen.DataGenTag end
     @test 4000 <= length(ds.streams[1].data.vec) <= 4800
     @test 6000 <= length(ds.streams[2].data.vec) <= 7200
 
-    config[:datasets][1][:data_streams][1][:proc_payloads][1][:ratio] = 1.0
-    @test_throws DataGen.ProcessPayloadRatioError Ctrl.configure_dataset(
+    config[:datasets][1][:data_streams][1][:proc_payload_groups][1][:proc_ratio] =
+        1.0
+    @test_throws RIOPA.ProcessGroupRatioError Ctrl.configure_dataset(
         config[:datasets][1],
     )
 end

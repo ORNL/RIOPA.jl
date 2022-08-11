@@ -8,7 +8,9 @@ import MPI
 mutable struct PayloadRange
     a::Int32
     b::Int32
+    PayloadRange(a::Real, b::Real) = new(floor(a), ceil(b))
 end
+
 
 # PayloadRange(r::NTuple{2,<:Integer}) = PayloadRange(r[1], r[2])
 
@@ -27,12 +29,9 @@ end
 struct PayloadGroup
     size_ratio::Float64
     proc_ratio::Float64
+    PayloadGroup(size_ratio, proc_ratio) =
+        new(get_ratio(size_ratio), get_ratio(proc_ratio))
 end
-
-# PayloadGroup(range::Vector{<:Integer}, ratio::T) where {T} =
-#     PayloadGroup(PayloadRange(range[1], range[2]), get_ratio(ratio))
-PayloadGroup(size_ratio, proc_ratio) =
-    PayloadGroup(get_ratio(size_ratio), get_ratio(proc_ratio))
 
 abstract type EvolutionFunction end
 
@@ -43,9 +42,53 @@ struct DataStreamConfig
     payload_groups::Vector{PayloadGroup}
 end
 
-DataStreamConfig(name::String, range::Vector{<:Integer},
-                 evolve::EvolutionFunction, groups::Vector{PayloadGroup}) =
-DataStreamConfig(name, PayloadRange(range[1], range[2]), evolve, groups)
+DataStreamConfig(
+    name::String,
+    range::Vector{<:Integer},
+    evolve::EvolutionFunction,
+    groups::Vector{PayloadGroup},
+) = DataStreamConfig(name, PayloadRange(range[1], range[2]), evolve, groups)
+
+struct ProcessGroupRatioError <: Exception
+    msg::String
+end
+
+function check_payload_group_ratios(
+    stream_cfg::DataStreamConfig,
+    dsname::AbstractString,
+    get_ratio,
+)
+    sum = 0.0
+    for grp in stream_cfg.payload_groups
+        sum += get_ratio(grp)
+    end
+    if !isapprox(sum, 1.0)
+        throw(
+            ProcessGroupRatioError(
+                "Sum of ratios ($sum) must equal 1; dataset: " *
+                dsname *
+                ", stream: " *
+                stream_cfg.name,
+            ),
+        )
+    end
+end
+
+function check_payload_group_ratios(
+    stream_cfg::DataStreamConfig,
+    dsname::AbstractString,
+)
+    check_payload_group_ratios(
+        stream_cfg,
+        dsname,
+        grp::PayloadGroup -> grp.size_ratio,
+    )
+    check_payload_group_ratios(
+        stream_cfg,
+        dsname,
+        grp::PayloadGroup -> grp.proc_ratio,
+    )
+end
 
 function get_payload_group_id(
     rank::Integer,
@@ -85,8 +128,6 @@ mutable struct DataStream
     data::DataObject
 end
 
-# DataStream(range::PayloadRange, evolve::EvolutionFunction) =
-#     DataStream(range, copy(range), evolve, DataVector())
 DataStream(initrange::PayloadRange, ratio::Float64, evolve::EvolutionFunction) =
     DataStream(initrange, ratio, initrange * ratio, evolve, DataVector())
 
@@ -125,8 +166,10 @@ function evolve_payload_range!(
     fn::PolynomialEvFn,
 )
     growth = fn.poly(step)
-    stream.range.a = round((stream.initial_range.a + growth) * stream.size_ratio)
-    stream.range.b = round((stream.initial_range.b + growth) * stream.size_ratio)
+    stream.range.a =
+        round((stream.initial_range.a + growth) * stream.size_ratio)
+    stream.range.b =
+        round((stream.initial_range.b + growth) * stream.size_ratio)
 end
 
 function evolve_payload_range!(stream::DataStream, step::Integer)
@@ -135,7 +178,7 @@ end
 
 function check_length(expected::Integer, params::Vector{<:Real})
     if length(params) != expected
-        @error "Wrong number of parameters"
+        error("Wrong number of parameters")
     end
     return params
 end
@@ -146,7 +189,7 @@ function get_evolution_function(evcfg::Config)
         "GrowthFactor" => return GrowthFactorEvFn(check_length(1, params))
         "Polynomial" => return PolynomialEvFn(params)
         "Linear" => return PolynomialEvFn(check_length(1, params))
-        _ => @error "Unsupported stream size evolution function"
+        _ => error("Unsupported stream size evolution function")
     end
 end
 
