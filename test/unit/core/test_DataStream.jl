@@ -4,6 +4,7 @@ import Test: @testset, @test, @test_throws
 @testset "evolution" begin
     stream = RIOPA.DataStream(
         RIOPA.PayloadRange(10, 20),
+        1.0,
         RIOPA.GrowthFactorEvFn(1.5),
     )
     RIOPA.evolve_payload_range!(stream, 1)
@@ -18,6 +19,7 @@ import Test: @testset, @test, @test_throws
 
     stream = RIOPA.DataStream(
         RIOPA.PayloadRange(10, 20),
+        1.0,
         RIOPA.PolynomialEvFn([0, 1]),
     )
     RIOPA.evolve_payload_range!(stream, 1)

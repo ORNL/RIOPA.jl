@@ -13,7 +13,7 @@ function hello(config::Config)
         "HDF5" => hello_hdf5(data)
         "ADIOS2" => hello_adios2(data)
         "Julia" => write(basename * "_$worldrank.dat", data)
-        _ => @error "Unsupported I/O strategy"
+        _ => error("Unsupported I/O strategy")
     end
 
     MPI.Barrier(MPI.COMM_WORLD)

@@ -27,25 +27,26 @@ function default_config()
                 :data_streams => [
                     D(
                         :name => "Level_0",
+                        :initial_size_range => [3000, 3600],
                         :evolution => D(
                             :function => "GrowthFactor",
                             :params => [1.0718],
                         ),
-                        :nprocs_ratio => 0.5,
-                        :proc_payloads => [
-                            D(:size_range => [1000, 1200], :ratio => 0.5),
-                            D(:size_range => [2000, 2400], :ratio => 0.5),
+                        :proc_payload_groups => [
+                            D(:size_ratio => "1/3", :proc_ratio => 0.5),
+                            D(:size_ratio => "2/3", :proc_ratio => 0.5),
                         ],
                     ),
                     D(
                         :name => "Level_1",
+                        :initial_size_range => [6000, 7200],
                         :evolution => D(
                             :function => "GrowthFactor",
                             :params => [1.0414],
                         ),
-                        :proc_payloads => [
-                            D(:size_range => [2000, 2500], :ratio => "1/4"),
-                            D(:size_range => [4000, 4800], :ratio => "3/4"),
+                        :proc_payload_groups => [
+                            D(:size_ratio => "1/3", :proc_ratio => "1/4"),
+                            D(:size_ratio => "2/3", :proc_ratio => "3/4"),
                         ],
                     ),
                 ],
@@ -61,16 +62,18 @@ function default_config()
                 :data_streams => [
                     D(
                         :name => "Level_0",
-                        :proc_payloads => [
-                            D(:size_range => [1000, 1200], :ratio => 0.1),
-                            D(:size_range => [2000, 2400], :ratio => 0.9),
+                        :initial_size_range => [3000, 3600],
+                        :proc_payload_groups => [
+                            D(:size_ratio => "1/3", :proc_ratio => 0.1),
+                            D(:size_ratio => "2/3", :proc_ratio => 0.9),
                         ],
                     ),
                     D(
                         :name => "Level_1",
-                        :proc_payloads => [
-                            D(:size_range => [2000, 2500], :ratio => "1/8"),
-                            D(:size_range => [4000, 4800], :ratio => "7/8"),
+                        :initial_size_range => [6000, 7300],
+                        :proc_payload_groups => [
+                            D(:size_ratio => "1/3", :proc_ratio => "1/8"),
+                            D(:size_ratio => "2/3", :proc_ratio => "7/8"),
                         ],
                     ),
                 ],

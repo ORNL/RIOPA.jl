@@ -4,7 +4,7 @@ module DataGen
 import RIOPA: TagBase, DataStream, PayloadRange, DataSet
 import OrderedCollections: LittleDict
 # Functions
-import RIOPA: evolve_payload_range!
+import RIOPA: check_payload_group_ratios, evolve_payload_range!
 # Modules
 import MPI, Random
 
@@ -32,27 +32,9 @@ struct DefaultDataGenTag <: DataGenTag end
 
 get_tag(::Nothing) = DefaultDataGenTag()
 
-struct ProcessPayloadRatioError <: Exception
-    msg::String
-end
-
 function check_payload_group_ratios(ds::DataSet)
     for stream_cfg in ds.cfg.streams
-        sum = 0.0
-        for grp in stream_cfg.payload_groups
-            sum += grp.ratio
-        end
-        if !isapprox(sum, 1.0)
-            throw(
-                ProcessPayloadRatioError(
-                    "Sum of payload group ratios ($sum) must equal 1" *
-                    "; dataset: " *
-                    ds.cfg.name *
-                    ", stream: " *
-                    stream_cfg.name,
-                ),
-            )
-        end
+        check_payload_group_ratios(stream_cfg, ds.cfg.name)
     end
 end
 
