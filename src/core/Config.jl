@@ -39,7 +39,7 @@ function default_config()
                     ),
                     D(
                         :name => "Level_1",
-                        :initial_size_range => [6000, 7300],
+                        :initial_size_range => [6000, 7200],
                         :evolution => D(
                             :function => "GrowthFactor",
                             :params => [1.0414],
