@@ -41,6 +41,16 @@ end
 function initialize_streams!(::DefaultDataGenTag, ds::DataSet)
     check_payload_group_ratios(ds)
     ds.streams = map(stream_cfg -> DataStream(stream_cfg), ds.cfg.streams)
+    for strm in ds.streams
+        str =
+            "ds: " *
+            ds.cfg.name *
+            ", stream: " *
+            string(strm.initial_range) *
+            ", " *
+            string(strm.range)
+        println(str)
+    end
 end
 
 function generate_stream_data!(

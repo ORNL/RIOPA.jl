@@ -11,9 +11,6 @@ mutable struct PayloadRange
     PayloadRange(a::Real, b::Real) = new(floor(a), ceil(b))
 end
 
-
-# PayloadRange(r::NTuple{2,<:Integer}) = PayloadRange(r[1], r[2])
-
 function Base.copy(r::PayloadRange)
     return PayloadRange(r.a, r.b)
 end
@@ -90,7 +87,7 @@ function check_payload_group_ratios(
     )
 end
 
-function get_payload_group_id(
+function get_payload_group_id_and_size(
     rank::Integer,
     nranks::Integer,
     cfg::DataStreamConfig,
@@ -99,17 +96,23 @@ function get_payload_group_id(
     current = 0.0
     for id = 1:length(cfg.payload_groups)
         grp = cfg.payload_groups[id]
+        prev = current
         current += grp.proc_ratio
         if percentile <= current
-            return id
+            size = floor(Int32, current * nranks - floor(prev * nranks))
+            return id, size
         end
     end
     # TODO: throw an error here ?
 end
 
-function get_payload_group_id(cfg::DataStreamConfig)
+function get_payload_group_id_and_size(cfg::DataStreamConfig)
     comm = MPI.COMM_WORLD
-    return get_payload_group_id(MPI.Comm_rank(comm), MPI.Comm_size(comm), cfg)
+    return get_payload_group_id_and_size(
+        MPI.Comm_rank(comm),
+        MPI.Comm_size(comm),
+        cfg,
+    )
 end
 
 abstract type DataObject end
@@ -131,11 +134,12 @@ end
 DataStream(initrange::PayloadRange, ratio::Float64, evolve::EvolutionFunction) =
     DataStream(initrange, ratio, initrange * ratio, evolve, DataVector())
 
-DataStream(cfg::DataStreamConfig) = DataStream(
-    cfg.initial_size_range,
-    cfg.payload_groups[get_payload_group_id(cfg)].size_ratio,
-    cfg.evolve,
-)
+function DataStream(cfg::DataStreamConfig)
+    group_id, group_size = get_payload_group_id_and_size(cfg)
+    group = cfg.payload_groups[group_id]
+    size_ratio = group.size_ratio / group_size
+    return DataStream(cfg.initial_size_range, size_ratio, cfg.evolve)
+end
 
 struct GrowthFactorEvFn <: EvolutionFunction
     factor::Float64
