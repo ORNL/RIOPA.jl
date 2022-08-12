@@ -30,7 +30,7 @@ import Test: @testset, @test, @test_throws
     @test streamcfg.payload_groups[2].proc_ratio == 0.5
     streamcfg = ds.cfg.streams[2]
     @test streamcfg.name == "Level_1"
-    @test streamcfg.initial_size_range == (6000, 7300)
+    @test streamcfg.initial_size_range == (6000, 7200)
     @test streamcfg.payload_groups[1].size_ratio == 1.0/3.0
     @test streamcfg.payload_groups[1].proc_ratio == 1 // 4
     @test streamcfg.payload_groups[2].size_ratio == 2.0/3.0
