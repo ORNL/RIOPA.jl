@@ -1,0 +1,15 @@
+version: 2
+
+conda: 
+  environment: docs/environment.yaml
+    
+python:
+   version: 3.7
+   system_packages: true
+
+sphinx:
+  fail_on_warning: true
+
+formats:
+  - pdf
+  - epub

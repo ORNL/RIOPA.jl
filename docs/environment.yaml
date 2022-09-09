@@ -1,0 +1,16 @@
+name: RIOPA.jl-docs
+
+# channels:
+#   - conda-forge
+
+dependencies:
+  # - breathe==4.33.0
+  # - docutils==0.17
+  # - python
+  - sphinx=4
+#  - funcparserlib>=0.3.6
+  - pip
+  - pip:
+    # - blockdiag==3.0.0
+    - sphinxcontrib-blockdiag==3.0.0
+    - sphinx_rtd_theme==1.0.0
