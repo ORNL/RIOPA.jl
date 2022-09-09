@@ -1,4 +1,4 @@
-Getting started
+Getting Started
 ===============
 
 It's helpful to set the following environment variables:
@@ -20,10 +20,11 @@ From top-level RIOPA directory run
 
    julia --project[=.]
 
-julia> ]
-(RIOPA) pkg> instantiate
-(RIOPA) pkg> build
-(RIOPA) pkg> <Ctrl-D>
+.. code-block:: julia
+    julia> ]
+    (RIOPA) pkg> instantiate
+    (RIOPA) pkg> build
+    (RIOPA) pkg> <Ctrl-D>
 
 Test Suite
 ----------
