@@ -1,7 +1,7 @@
 name: RIOPA.jl-docs
 
-# channels:
-#   - conda-forge
+channels:
+  - conda-forge
 
 dependencies:
   - breathe==4.33.0
