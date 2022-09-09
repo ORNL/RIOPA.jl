@@ -18,13 +18,14 @@ From top-level RIOPA directory run
 
 .. code-block:: console
 
-   julia --project[=.]
+    julia --project[=.]
 
 .. code-block:: julia
-    julia> ]
-    (RIOPA) pkg> instantiate
-    (RIOPA) pkg> build
-    (RIOPA) pkg> <Ctrl-D>
+
+   julia> ]
+   (RIOPA) pkg> instantiate
+   (RIOPA) pkg> build
+   (RIOPA) pkg> <Ctrl-D>
 
 Test Suite
 ----------

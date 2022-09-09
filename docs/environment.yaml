@@ -4,7 +4,7 @@ name: RIOPA.jl-docs
 #   - conda-forge
 
 dependencies:
-  # - breathe==4.33.0
+  - breathe==4.33.0
   # - docutils==0.17
   # - python
   - sphinx=4
