@@ -1,3 +1,5 @@
+[![Documentation Status](https://readthedocs.org/projects/riopajl/badge/?version=latest)](https://riopajl.readthedocs.io/en/latest/?badge=latest)
+
 # RIOPA.jl
 
 Reproducible Input Ouput (I/O) Pattern Application (RIOPA).
