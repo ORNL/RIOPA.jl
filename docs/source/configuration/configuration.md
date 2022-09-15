@@ -6,6 +6,7 @@ multi-level hierarchy, since we want to flexibly model I/O patterns in terms of
 demonstrates most of the features of RIOPA, followed by a reference describing
 each of the configuration keywords.
 
+example.yaml
 ```yaml
 datasets:
   - type: "output"
@@ -101,11 +102,13 @@ may have completely different rules for when and how data is written (or read).
  - __`data_streams:`__ List of data stream configurations.
 
 #### Data Streams
+
 All the data streams for a given output dataset are written in the same
 operation, but each stream represents a distinct aspect of the output and may
 have different rules for how data grows and is distributed among process ranks.
 
- - __`name:`__ Literal string used for naming files or directories
+ - __`name:`__ Literal string used for naming files or directories. You may
+   arbitrarily nest stream directories using a `/`, like `name: "a/b/c"`
  - __`initial_size_range:`__ List of two (integer) values specifying the total
    size of the output at the first I/O step. This is specified as a range to
    allow for variablity in output. Note that the evolution function below is
@@ -124,6 +127,10 @@ have different rules for how data grows and is distributed among process ranks.
        term is already provided, derived from the `initial_size_range`
 
 ##### Payload Groups
+
+Process payload groups are specified with size ratio and process ratio. These
+ratios may be given as fractions (or Julia Rationals) in quotes or as floating
+point values.
 
  - __`proc_payload_groups:`__ List of payload group configurations for
    distributing the payload across groups of processes (ranks). This allows for
