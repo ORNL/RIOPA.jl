@@ -8,6 +8,7 @@ dependencies:
   # - docutils==0.17
   # - python
   - sphinx=4
+  - myst-parser
 #  - funcparserlib>=0.3.6
   - pip
   - pip:
