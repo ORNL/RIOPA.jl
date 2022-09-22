@@ -1,5 +1,6 @@
 #!/bin/bash
 
+module load git
 module load hdf5
 module load julia
 
