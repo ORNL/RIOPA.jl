@@ -101,7 +101,7 @@ may have completely different rules for when and how data is written (or read).
    to simulate compute time between I/O steps.
  - __`data_streams:`__ List of data stream configurations.
 
-#### Data Streams
+### Data Streams
 
 All the data streams for a given output dataset are written in the same
 operation, but each stream represents a distinct aspect of the output and may
@@ -126,7 +126,7 @@ have different rules for how data grows and is distributed among process ranks.
        $[a_1, a_2, ...]$. That is, the constant term $a_0$ is left out. This
        term is already provided, derived from the `initial_size_range`
 
-##### Payload Groups
+### Payload Groups
 
 Process payload groups are specified with size ratio and process ratio. These
 ratios may be given as fractions (or Julia Rationals) in quotes or as floating
