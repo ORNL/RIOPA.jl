@@ -1,4 +1,4 @@
-### Summit (OLCF)
+# Summit (OLCF)
 
 1. Load necessary modules
 ```

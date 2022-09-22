@@ -1,4 +1,4 @@
-### Crusher (OLCF)
+# Crusher (OLCF)
 
 1. Load necessary modules
 ```
