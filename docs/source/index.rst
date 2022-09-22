@@ -12,6 +12,7 @@ Funded by the `Exascale Computing Project (ECP) <https://www.exascaleproject.org
    :caption: Getting Started
 
    getting_started/getting_started
+   getting_started/systems
 
 .. toctree::
    :caption: Configuration
