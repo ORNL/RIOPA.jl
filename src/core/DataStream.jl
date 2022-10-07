@@ -141,6 +141,22 @@ function DataStream(cfg::DataStreamConfig)
     return DataStream(cfg.initial_size_range, size_ratio, cfg.evolve)
 end
 
+struct ConstantEvFn <: EvolutionFunction
+    range::PayloadRange
+end
+
+ConstantEvFn(params::Vector{<:Integer}) =
+    ConstantEvFn(PayloadRange(params[1], params[2]))
+
+function evolve_payload_range!(
+    stream::DataStream,
+    step::Integer,
+    fn::ConstantEvFn,
+)
+    stream.range.a = fn.range.a
+    stream.range.b = fn.range.b
+end
+
 struct GrowthFactorEvFn <: EvolutionFunction
     factor::Float64
 end
@@ -176,6 +192,32 @@ function evolve_payload_range!(
         round((stream.initial_range.b + growth) * stream.size_ratio)
 end
 
+struct StepAssociatedFunction
+    step::Integer
+    fn::EvolutionFunction
+end
+
+StepAssociatedFunction(pcfg::Config) =
+    StepAssociatedFunction(pcfg[:step], get_evolution_function(pcfg))
+
+struct PiecewiseEvFn <: EvolutionFunction
+    fns::Vector{StepAssociatedFunction}
+    PiecewiseEvFn(params::Vector{T}) where {T<:Config} =
+        new(map(pcfg -> StepAssociatedFunction(pcfg), params))
+end
+
+function evolve_payload_range!(
+    stream::DataStream,
+    step::Integer,
+    fn::PiecewiseEvFn,
+)
+    for i = 1:(length(fn.fns) - 1)
+        if fn.fns[i].step <= step < fn.fns[i + 1].step
+            evolve_payload_range!(stream, step, fn.fns[i].fn)
+        end
+    end
+end
+
 function evolve_payload_range!(stream::DataStream, step::Integer)
     evolve_payload_range!(stream, step, stream.evolve)
 end
@@ -187,14 +229,25 @@ function check_length(expected::Integer, params::Vector{<:Real})
     return params
 end
 
-function get_evolution_function(evcfg::Config)
-    params = evcfg[:params]
-    @match evcfg[:function] begin
-        "GrowthFactor" => return GrowthFactorEvFn(check_length(1, params))
-        "Polynomial" => return PolynomialEvFn(params)
-        "Linear" => return PolynomialEvFn(check_length(1, params))
+function get_evolution_function(fname::String, params)
+    @match lowercase(fname) begin
+        "constant" => ConstantEvFn(params)
+        "growthfactor" => GrowthFactorEvFn(check_length(1, params))
+        "polynomial" => PolynomialEvFn(params)
+        "linear" => PolynomialEvFn(check_length(1, params))
+        "piecewise" => PiecewiseEvFn(params)
         _ => error("Unsupported stream size evolution function")
     end
 end
 
-get_evolution_function(nothing) = GrowthFactorEvFn(1.0)
+get_evolution_function(::Nothing, params::Vector{<:Real}) =
+    get_evolution_function("GrowthFactor", params)
+
+get_evolution_function(::Nothing, ::Nothing) = GrowthFactorEvFn(1.0)
+
+get_evolution_function(evcfg::Config) = get_evolution_function(
+    get(evcfg, :function, nothing),
+    get(evcfg, :params, nothing),
+)
+
+get_evolution_function(::Nothing) = GrowthFactorEvFn(1.0)
